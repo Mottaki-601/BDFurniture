@@ -1,0 +1,149 @@
+@model dynamic
+@{
+    ViewData["Title"] = "Manage Products - BD Furniture Admin";
+    var products = ViewBag.Products as List<BDFurniture_Web.Models.Product> ?? new();
+    var categories = ViewBag.Categories as List<BDFurniture_Web.Models.Category> ?? new();
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+    int? selectedCategory = ViewBag.SelectedCategory;
+}
+
+<div class="page-hero" style="padding-top:6rem;padding-bottom:2rem;">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <h1><i class="fas fa-couch me-2" style="color:var(--gold);"></i> Manage Products</h1>
+            <p style="color:rgba(255,255,255,0.75);">Add, edit, remove, and showcase furniture items.</p>
+        </div>
+        <div>
+            <a asp-action="CreateProduct" class="btn-gold"><i class="fas fa-plus"></i> Add New Product</a>
+        </div>
+    </div>
+</div>
+
+<section class="section-pad">
+    <div class="container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <!-- Filter by Category -->
+        <div class="filter-bar mb-4">
+            <span class="fw-bold me-2">Filter:</span>
+            <a asp-action="Products" class="filter-chip @(!selectedCategory.HasValue ? "active" : "")">All Categories</a>
+            @foreach (var cat in categories)
+            {
+                <a asp-action="Products" asp-route-categoryId="@cat.Id" class="filter-chip @(selectedCategory == cat.Id ? "active" : "")">
+                    @cat.Name
+                </a>
+            }
+        </div>
+
+        <div class="admin-card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category / Subcategory</th>
+                            <th>Price</th>
+                            <th>Featured</th>
+                            <th>Rating</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (products.Any())
+                        {
+                            foreach (var p in products)
+                            {
+                                var mainImg = p.Images?.FirstOrDefault(i => i.IsMain) ?? p.Images?.FirstOrDefault();
+                                <tr>
+                                    <td style="width: 70px;">
+                                        @if (mainImg != null)
+                                        {
+                                            <img src="@mainImg.ImagePath" alt="@p.Name" class="rounded" style="width:60px;height:50px;object-fit:cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-light rounded text-center d-flex align-items-center justify-content-center" style="width:60px;height:50px;">
+                                                <i class="fas fa-couch text-muted"></i>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">@p.Name</div>
+                                        <small class="text-muted">Slug: @p.Slug</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border">@p.SubCategory?.Category?.Name</span>
+                                        <div class="small text-muted mt-1">@p.SubCategory?.Name</div>
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold text-gold">৳@(p.DiscountPrice?.ToString("N0") ?? p.Price?.ToString("N0"))</div>
+                                        @if (p.DiscountPrice.HasValue && p.Price.HasValue)
+                                        {
+                                            <small class="text-decoration-line-through text-muted">৳@p.Price.Value.ToString("N0")</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (p.IsFeatured)
+                                        {
+                                            <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> Featured</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Standard</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="text-warning"><i class="fas fa-star"></i></span> @p.AverageRating.ToString("F1") (@p.TotalRatings)
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="/product/@p.Slug" target="_blank" class="btn btn-sm btn-outline-info me-1" title="View in store">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                        <a asp-action="EditProduct" asp-route-id="@p.Id" class="btn btn-sm btn-outline-primary me-1" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form asp-action="DeleteProduct" asp-route-id="@p.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">
+                                    No products found. Click "Add New Product" to create your first item!
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            @if (totalPages > 1)
+            {
+                <div class="pagination-bd">
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <a asp-action="Products" asp-route-page="@i" asp-route-categoryId="@selectedCategory" class="page-btn @(i == currentPage ? "active" : "")">
+                            @i
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</section>
+

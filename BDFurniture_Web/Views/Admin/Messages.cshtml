@@ -1,0 +1,74 @@
+@model List<BDFurniture_Web.Models.ContactMessage>
+@{
+    ViewData["Title"] = "Contact Messages - BD Furniture Admin";
+}
+
+<div class="page-hero" style="padding-top:6rem;padding-bottom:2rem;">
+    <div class="container">
+        <h1><i class="fas fa-envelope-open-text me-2" style="color:var(--gold);"></i> Contact Messages</h1>
+        <p style="color:rgba(255,255,255,0.75);">Inquiries submitted through the website contact forms.</p>
+    </div>
+</div>
+
+<section class="section-pad">
+    <div class="container">
+        <div class="admin-card">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Status</th>
+                                <th>Sender</th>
+                                <th>Email &amp; Phone</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Received</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in Model)
+                            {
+                                <tr class="@(!m.IsRead ? "table-warning" : "")">
+                                    <td>
+                                        @if (!m.IsRead)
+                                        {
+                                            <span class="badge bg-danger">New</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Read</span>
+                                        }
+                                    </td>
+                                    <td><strong>@m.Name</strong></td>
+                                    <td>
+                                        <div><a href="mailto:@m.Email">@m.Email</a></div>
+                                        <small class="text-muted"><a href="tel:@m.PhoneNumber">@m.PhoneNumber</a></small>
+                                    </td>
+                                    <td>@m.Subject</td>
+                                    <td style="max-width:300px;"><div style="font-size:0.9rem;">@m.Message</div></td>
+                                    <td><small>@m.CreatedAt.ToString("MMM dd, yyyy HH:mm")</small></td>
+                                    <td>
+                                        @if (!m.IsRead)
+                                        {
+                                            <form asp-action="MarkRead" asp-route-id="@m.Id" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-success">Mark Read</button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted py-4 text-center">No contact messages received yet.</p>
+            }
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,116 @@
+@model BDFurniture_Web.Models.Product
+@{
+    ViewData["Title"] = "Add New Product - BD Furniture Admin";
+    var categories = ViewBag.Categories as List<BDFurniture_Web.Models.Category> ?? new();
+    var subCategories = ViewBag.SubCategories as List<BDFurniture_Web.Models.SubCategory> ?? new();
+}
+
+<div class="page-hero" style="padding-top:6rem;padding-bottom:2rem;">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-bd">
+                <li class="breadcrumb-item"><a asp-action="Index">Dashboard</a></li>
+                <li class="breadcrumb-item"><a asp-action="Products">Products</a></li>
+                <li class="breadcrumb-item active">Add Product</li>
+            </ol>
+        </nav>
+        <h1><i class="fas fa-plus-circle me-2" style="color:var(--gold);"></i> Add New Product</h1>
+    </div>
+</div>
+
+<section class="section-pad">
+    <div class="container">
+        <div class="admin-card">
+            <form asp-action="CreateProduct" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="row g-4">
+                    <!-- Basic Information -->
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Name" class="form-label-bd">Product Name *</label>
+                        <input asp-for="Name" class="form-control-bd" placeholder="e.g. Royal King Size Bed" required />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label-bd">Select Subcategory *</label>
+                        <select asp-for="SubCategoryId" class="form-control-bd" required id="subCategorySelect">
+                            <option value="">-- Choose Subcategory --</option>
+                            @foreach (var cat in categories)
+                            {
+                                <optgroup label="@cat.Name">
+                                    @foreach (var sub in cat.SubCategories)
+                                    {
+                                        <option value="@sub.Id">@sub.Name</option>
+                                    }
+                                </optgroup>
+                            }
+                        </select>
+                        <span asp-validation-for="SubCategoryId" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Pricing & WhatsApp -->
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Price" class="form-label-bd">Regular Price (৳)</label>
+                        <input asp-for="Price" type="number" step="0.01" class="form-control-bd" placeholder="e.g. 45000" />
+                        <span asp-validation-for="Price" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label asp-for="DiscountPrice" class="form-label-bd">Discount Price (৳)</label>
+                        <input asp-for="DiscountPrice" type="number" step="0.01" class="form-control-bd" placeholder="e.g. 39999" />
+                        <span asp-validation-for="DiscountPrice" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label asp-for="WhatsAppNumber" class="form-label-bd">WhatsApp Order Phone *</label>
+                        <input asp-for="WhatsAppNumber" class="form-control-bd" value="+8801700000000" required />
+                        <span asp-validation-for="WhatsAppNumber" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Short Description -->
+                    <div class="col-12">
+                        <label asp-for="ShortDescription" class="form-label-bd">Short Summary</label>
+                        <input asp-for="ShortDescription" class="form-control-bd" placeholder="Brief 1-2 sentence overview of the product" />
+                    </div>
+
+                    <!-- Detailed Description -->
+                    <div class="col-12">
+                        <label asp-for="Description" class="form-label-bd">Full Details / Dimensions / Wood Quality</label>
+                        <textarea asp-for="Description" class="form-control-bd" rows="5" placeholder="Include materials (e.g. Segun wood, Chittagong Teak), dimensions, warranty, polish finish..."></textarea>
+                    </div>
+
+                    <!-- Photos -->
+                    <div class="col-12">
+                        <label class="form-label-bd">Upload Product Images (Select multiple)</label>
+                        <input type="file" name="images" multiple class="form-control-bd" accept="image/*" />
+                        <small class="text-muted">The first image will be set as the main cover photo.</small>
+                    </div>
+
+                    <!-- Featured and Active Flags -->
+                    <div class="col-12 col-md-6">
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="IsFeatured" id="isFeaturedCheck" />
+                            <label class="form-check-label fw-bold" for="isFeaturedCheck">Showcase on Home Page (Featured)</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="IsActive" checked id="isActiveCheck" />
+                            <label class="form-check-label fw-bold" for="isActiveCheck">Active in Store</label>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="col-12 mt-4 d-flex gap-2">
+                        <button type="submit" class="btn-gold"><i class="fas fa-save me-1"></i> Save Product</button>
+                        <a asp-action="Products" class="btn btn-outline-secondary" style="border-radius:50px;padding:0.75rem 2rem;">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+

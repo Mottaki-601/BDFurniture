@@ -1,8 +1,390 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "BD Furniture - Premium Quality Furniture";
+    Layout = "_Layout";
+    var categories = ViewBag.Categories as List<BDFurniture_Web.Models.Category> ?? new();
+    var featuredProducts = ViewBag.FeaturedProducts as List<BDFurniture_Web.Models.Product> ?? new();
+    var ytVideos = ViewBag.YouTubeVideos as List<BDFurniture_Web.Models.YouTubeVideo> ?? new();
+    var reviews = ViewBag.Reviews as List<BDFurniture_Web.Models.ProductReview> ?? new();
+    var settings = (ViewBag.Settings as List<BDFurniture_Web.Models.SiteSetting> ?? new());
+    string GetSetting(string key) => settings.FirstOrDefault(s => s.SettingKey == key)?.SettingValue ?? "";
+    var whatsapp = GetSetting("WhatsApp");
+    var watchVideoId = GetSetting("WatchVideoYouTubeId");
+    var ytChannelUrl = GetSetting("YouTubeChannelUrl");
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- ===================== HERO SECTION ===================== -->
+<section class="hero-section" id="hero">
+    <video class="hero-video-bg" autoplay muted loop playsinline preload="none">
+        <source src="/videos/hero-bg.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <span class="hero-brand">✦ Premium Quality Furniture ✦</span>
+        <h1 class="hero-title">
+            BD <span>Furniture</span><br />
+            <small style="font-size:0.55em; font-weight:400; color:rgba(255,255,255,0.85);">Crafting Your Dream Home</small>
+        </h1>
+        <p class="hero-desc">Discover exquisite furniture collections crafted with passion.<br class="d-none d-md-block" /> Transform your space into a comfortable, elegant masterpiece.</p>
+        <div class="hero-actions">
+            <a href="#categories" class="btn-gold">
+                <i class="fas fa-compass"></i> Explore Collection
+            </a>
+            @if (!string.IsNullOrEmpty(watchVideoId))
+            {
+                <button onclick="openYouTubeModal('@watchVideoId')" class="btn-outline-white">
+                    <i class="fas fa-play-circle"></i> Watch Video
+                </button>
+            }
+        </div>
+    </div>
+    <div class="hero-scroll-hint">
+        <span>SCROLL</span>
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- ===================== EXPLORE CATEGORIES ===================== -->
+<section class="section-pad" id="categories">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-subtitle">✦ Our Collections</span>
+            <h2>Explore Categories</h2>
+            <div class="section-divider"></div>
+            <p style="color:var(--text-medium);max-width:520px;margin:0 auto;">From luxurious bedrooms to stylish living spaces, find the perfect furniture for every room.</p>
+        </div>
+
+        <div class="row g-3 g-md-4">
+            @foreach (var cat in categories)
+            {
+                <div class="col-6 col-md-4 col-lg-2 aos-fade-up">
+                    @if (!string.IsNullOrEmpty(cat.ImagePath))
+                    {
+                        <a href="/collection/@cat.Slug" class="category-card">
+                            <img src="@cat.ImagePath" alt="@cat.Name" loading="lazy" />
+                            <div class="category-card-overlay">
+                                <div class="category-card-icon">
+                                    <i class="@(cat.IconClass ?? "fas fa-cube")"></i>
+                                </div>
+                                <div class="category-card-name">@cat.Name</div>
+                                <div class="category-card-count">
+                                    <i class="fas fa-arrow-right"></i> View All
+                                </div>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="/collection/@cat.Slug" class="category-card-no-img">
+                            <i class="@(cat.IconClass ?? "fas fa-cube")" style="font-size:2rem;color:var(--gold);"></i>
+                            <div>
+                                <div style="font-family:var(--font-primary);font-size:1rem;font-weight:700;">@cat.Name</div>
+                                <div style="font-size:0.75rem;color:var(--gold-light);margin-top:0.25rem;">View All <i class="fas fa-arrow-right"></i></div>
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ===================== FEATURED PRODUCTS ===================== -->
+@if (featuredProducts.Any())
+{
+    <section class="section-pad bg-cream">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">✦ Hand-Picked For You</span>
+                <h2>Featured Products</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="row g-3 g-md-4">
+                @foreach (var product in featuredProducts)
+                {
+                    var mainImg = product.Images?.FirstOrDefault(i => i.IsMain) ?? product.Images?.FirstOrDefault();
+                    var waMsg = Uri.EscapeDataString($"Hello! I'm interested in: {product.Name}");
+                    <div class="col-6 col-md-4 col-lg-3 aos-fade-up">
+                        <div class="product-card">
+                            <div class="product-card-img">
+                                @if (product.IsFeatured)
+                                {
+                                    <span class="product-badge">Featured</span>
+                                }
+                                @if (mainImg != null)
+                                {
+                                    <img src="@mainImg.ImagePath" alt="@product.Name" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--cream-dark);">
+                                        <i class="fas fa-couch" style="font-size:3rem;color:var(--gold-light);"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="product-card-body">
+                                <div class="product-card-category">@product.SubCategory?.Category?.Name</div>
+                                <div class="product-card-name">@product.Name</div>
+                                <div class="star-rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fas fa-star @(i <= (int)product.AverageRating ? "filled" : "")"></i>
+                                    }
+                                    <span class="rating-count">(@product.TotalRatings)</span>
+                                </div>
+                                @if (product.Price.HasValue)
+                                {
+                                    <div class="product-card-price">
+                                        ৳@product.DiscountPrice?.ToString("N0") ?? @product.Price?.ToString("N0")
+                                        @if (product.DiscountPrice.HasValue && product.Price.HasValue)
+                                        {
+                                            <span class="original-price">৳@product.Price.Value.ToString("N0")</span>
+                                        }
+                                    </div>
+                                }
+                                <div class="product-card-actions">
+                                    <a href="/product/@product.Slug" class="btn-view-detail">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+                                    <a href="https://wa.me/@(product.WhatsAppNumber?.Replace("+",""))/?text=@waMsg"
+                                       target="_blank" class="btn-whatsapp" title="Order on WhatsApp">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<!-- ===================== FEATURED SERVICES ===================== -->
+<section class="section-pad">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-subtitle">✦ What We Offer</span>
+            <h2>Featured Services</h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="row g-3 g-md-4">
+            <div class="col-6 col-md-3 aos-fade-up">
+                <a href="/collection/bedroom" class="service-card">
+                    <div class="service-icon"><i class="fas fa-bed"></i></div>
+                    <h4>Home Furniture</h4>
+                    <p>Premium quality furniture for every room in your home.</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 aos-fade-up aos-delay-1">
+                <a href="/collection/interior-design" class="service-card">
+                    <div class="service-icon"><i class="fas fa-drafting-compass"></i></div>
+                    <h4>Interior Design</h4>
+                    <p>Professional interior design services for your space.</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 aos-fade-up aos-delay-2">
+                <a href="/Home/Contact" class="service-card">
+                    <div class="service-icon"><i class="fas fa-tools"></i></div>
+                    <h4>Custom Orders</h4>
+                    <p>Get furniture tailored exactly to your specifications.</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 aos-fade-up aos-delay-3">
+                <a href="/Home/Contact" class="service-card">
+                    <div class="service-icon"><i class="fas fa-truck"></i></div>
+                    <h4>Fast Delivery</h4>
+                    <p>Quick and safe delivery right to your doorstep.</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== YOUTUBE SECTION ===================== -->
+<section class="section-pad youtube-section">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+            <div>
+                <span class="section-subtitle">✦ Our Channel</span>
+                <h2 class="mb-0">Watch Our Videos</h2>
+            </div>
+            @if (!string.IsNullOrEmpty(ytChannelUrl))
+            {
+                <a href="@ytChannelUrl" target="_blank" class="btn-outline-gold flex-shrink-0">
+                    <i class="fab fa-youtube"></i> View Channel
+                </a>
+            }
+        </div>
+
+        @if (ytVideos.Any())
+        {
+            <div class="video-scroll-wrap">
+                <div class="video-scroll-track" id="videoTrack">
+                    @foreach (var video in ytVideos)
+                    {
+                        var thumb = string.IsNullOrEmpty(video.ThumbnailUrl)
+                            ? $"https://img.youtube.com/vi/{video.YouTubeId}/hqdefault.jpg"
+                            : video.ThumbnailUrl;
+                        <div class="yt-card" onclick="openYouTubeModal('@video.YouTubeId')">
+                            <div class="yt-thumb">
+                                <img src="@thumb" alt="@video.Title" loading="lazy" />
+                                <div class="yt-play-btn"><i class="fas fa-play"></i></div>
+                            </div>
+                            <div class="yt-info">
+                                <h5>@video.Title</h5>
+                                @if (!string.IsNullOrEmpty(video.Description))
+                                {
+                                    <p>@video.Description</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="scroll-controls">
+                <button class="scroll-btn" data-scroll-target="#videoTrack" data-scroll-dir="left">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="scroll-btn" data-scroll-target="#videoTrack" data-scroll-dir="right">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        }
+        else
+        {
+            <div style="text-align:center;padding:3rem;opacity:0.5;">
+                <i class="fab fa-youtube" style="font-size:4rem;color:var(--gold);"></i>
+                <p style="margin-top:1rem;color:rgba(255,255,255,0.6);">Videos will appear here once added by admin.</p>
+                @if (!string.IsNullOrEmpty(ytChannelUrl))
+                {
+                    <a href="@ytChannelUrl" target="_blank" class="btn-outline-gold mt-2"><i class="fab fa-youtube"></i> Visit Our Channel</a>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<!-- ===================== ABOUT + CONTACT ===================== -->
+<section class="section-pad about-contact-section" id="contact">
+    <div class="container">
+        <div class="row g-4 g-lg-5 align-items-start">
+
+            <!-- About Column -->
+            <div class="col-12 col-lg-6">
+                <span class="section-subtitle">✦ Who We Are</span>
+                <h2>Meet Your House<br /><span style="color:var(--gold);">Comfortable &amp; Elegant</span></h2>
+                <div class="section-divider" style="margin:1rem 0;"></div>
+                <p style="color:var(--text-medium);line-height:1.8;margin-bottom:2rem;">
+                    BD Furniture has been crafting premium quality furniture for Bangladeshi homes for years. 
+                    We combine traditional craftsmanship with modern design to create pieces that transform 
+                    your living space into a masterpiece of comfort and elegance.
+                </p>
+
+                <div class="about-info-item aos-fade-up">
+                    <div class="about-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div>
+                        <h6>Our Address</h6>
+                        <p>@GetSetting("Address")</p>
+                    </div>
+                </div>
+                <div class="about-info-item aos-fade-up aos-delay-1">
+                    <div class="about-icon"><i class="fas fa-phone"></i></div>
+                    <div>
+                        <h6>Call Us</h6>
+                        <p><a href="tel:@GetSetting("Phone")" style="color:inherit;text-decoration:none;">@GetSetting("Phone")</a></p>
+                    </div>
+                </div>
+                <div class="about-info-item aos-fade-up aos-delay-2">
+                    <div class="about-icon"><i class="fas fa-envelope"></i></div>
+                    <div>
+                        <h6>Email Us</h6>
+                        <p><a href="mailto:@GetSetting("Email")" style="color:inherit;text-decoration:none;">@GetSetting("Email")</a></p>
+                    </div>
+                </div>
+                <div class="about-info-item aos-fade-up aos-delay-3">
+                    <div class="about-icon"><i class="fab fa-facebook-f"></i></div>
+                    <div>
+                        <h6>Follow Us</h6>
+                        <p><a href="@GetSetting("Facebook")" target="_blank" style="color:var(--gold);text-decoration:none;">BD Furniture on Facebook <i class="fas fa-external-link-alt" style="font-size:0.75rem;"></i></a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form Column -->
+            <div class="col-12 col-lg-6">
+                <div class="contact-form-card">
+                    <h3 style="margin-bottom:0.25rem;">Send Us a Message</h3>
+                    <p style="color:var(--text-medium);font-size:0.875rem;margin-bottom:1.75rem;">We'll get back to you as soon as possible.</p>
+
+                    <form id="contactForm">
+                        @Html.AntiForgeryToken()
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-bd">Your Name *</label>
+                                <input type="text" name="Name" class="form-control-bd" placeholder="Enter your name" required />
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-bd">Email Address *</label>
+                                <input type="email" name="Email" class="form-control-bd" placeholder="Enter your email" required />
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-bd">Phone Number</label>
+                                <input type="tel" name="PhoneNumber" class="form-control-bd" placeholder="+880 1XXX-XXXXXX" />
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-bd">Subject</label>
+                                <input type="text" name="Subject" class="form-control-bd" placeholder="How can we help?" />
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-bd">Message *</label>
+                                <textarea name="Message" class="form-control-bd" rows="4" placeholder="Tell us about your requirements..." required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn-gold w-100" style="justify-content:center;">
+                                    <i class="fas fa-paper-plane"></i> Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== REVIEWS SECTION ===================== -->
+@if (reviews.Any())
+{
+    <section class="section-pad">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">✦ Customer Stories</span>
+                <h2>What Our Customers Say</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="row g-3 g-md-4">
+                @foreach (var review in reviews)
+                {
+                    <div class="col-12 col-md-6 col-lg-4 aos-fade-up">
+                        <div class="review-card">
+                            <div class="review-quote">&ldquo;</div>
+                            <p class="review-text">@review.ReviewText</p>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <div class="reviewer-name">@(review.ReviewerName ?? "Anonymous")</div>
+                                    <div class="reviewer-role">Verified Customer</div>
+                                </div>
+                                <div class="star-rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fas fa-star filled"></i>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}

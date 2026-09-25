@@ -1,0 +1,306 @@
+@model BDFurniture_Web.Models.Product
+@{
+    ViewData["Title"] = Model.Name + " - BD Furniture";
+    var relatedProducts = ViewBag.RelatedProducts as List<BDFurniture_Web.Models.Product> ?? new();
+    var userRating = ViewBag.UserRating as BDFurniture_Web.Models.ProductRating;
+    var mainImg = Model.Images?.FirstOrDefault(i => i.IsMain) ?? Model.Images?.FirstOrDefault();
+    var waMsg = Uri.EscapeDataString($"Hello! I'm interested in: {Model.Name}. Please share more details.");
+}
+
+<div class="page-hero" style="padding-top:6rem;padding-bottom:2rem;">
+    <div class="container">
+        <nav aria-label="breadcrumb"><ol class="breadcrumb breadcrumb-bd">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/collection/@Model.SubCategory?.Category?.Slug">@Model.SubCategory?.Category?.Name</a></li>
+            <li class="breadcrumb-item"><a href="/collection/@Model.SubCategory?.Category?.Slug/@Model.SubCategory?.Slug">@Model.SubCategory?.Name</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol></nav>
+    </div>
+</div>
+
+<section class="section-pad" style="padding-top:2rem;">
+    <div class="container">
+        <div class="row g-4 g-lg-5">
+
+            <!-- Image Gallery Column -->
+            <div class="col-12 col-lg-6">
+                <div class="product-detail-img-main">
+                    @if (mainImg != null)
+                    {
+                        <img id="mainProductImg" src="@mainImg.ImagePath" alt="@Model.Name" />
+                    }
+                    else
+                    {
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--cream);">
+                            <i class="fas fa-couch" style="font-size:5rem;color:var(--gold-light);"></i>
+                        </div>
+                    }
+                </div>
+                @if (Model.Images?.Count > 1)
+                {
+                    <div class="product-thumb-list">
+                        @foreach (var img in Model.Images)
+                        {
+                            <div class="product-thumb @(img.IsMain ? "active" : "")" data-img-src="@img.ImagePath">
+                                <img src="@img.ImagePath" alt="@Model.Name" loading="lazy" />
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- Product Info Column -->
+            <div class="col-12 col-lg-6">
+                <div style="display:inline-flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+                    <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">@Model.SubCategory?.Category?.Name</span>
+                    <span style="color:var(--cream-dark);">›</span>
+                    <span style="font-size:0.75rem;color:var(--text-medium);">@Model.SubCategory?.Name</span>
+                </div>
+
+                <h1 style="font-size:clamp(1.6rem,4vw,2.2rem);margin-bottom:0.75rem;">@Model.Name</h1>
+
+                <!-- Star Rating Display -->
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <div class="star-rating" style="gap:0.3rem;">
+                        @for (int i = 1; i <= 5; i++) { <i class="fas fa-star" style="font-size:1rem; color:@(i <= (int)Model.AverageRating ? "#FFC107" : "#DDD");"></i> }
+                    </div>
+                    <span style="font-weight:700;color:var(--primary);">@Model.AverageRating.ToString("F1")</span>
+                    <span style="color:var(--text-light);font-size:0.875rem;">(@Model.TotalRatings reviews)</span>
+                    <span style="color:var(--text-light);">·</span>
+                    <span style="color:var(--text-light);font-size:0.875rem;"><i class="fas fa-eye"></i> @Model.ViewCount views</span>
+                </div>
+
+                @if (Model.Price.HasValue)
+                {
+                    <div style="font-size:2rem;font-weight:800;color:var(--gold-dark);margin:1rem 0;">
+                        ৳@(Model.DiscountPrice?.ToString("N0") ?? Model.Price.Value.ToString("N0"))
+                        @if (Model.DiscountPrice.HasValue)
+                        {
+                            <span style="font-size:1.1rem;color:var(--text-light);text-decoration:line-through;font-weight:400;margin-left:0.5rem;">৳@Model.Price.Value.ToString("N0")</span>
+                            var discount = (int)(((Model.Price.Value - Model.DiscountPrice.Value) / Model.Price.Value) * 100);
+                            <span style="font-size:0.85rem;background:#e74c3c;color:white;padding:0.2rem 0.6rem;border-radius:50px;margin-left:0.5rem;">-@discount%</span>
+                        }
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.ShortDescription))
+                {
+                    <p style="color:var(--text-medium);line-height:1.7;margin-bottom:1.5rem;">@Model.ShortDescription</p>
+                }
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2 flex-wrap mb-3">
+                    <a href="https://wa.me/@(Model.WhatsAppNumber?.Replace("+",""))/?text=@waMsg" target="_blank"
+                       class="btn-gold" style="flex:1;justify-content:center;min-width:160px;">
+                        <i class="fab fa-whatsapp"></i> Order Now
+                    </a>
+                    <button class="btn-outline-gold" onclick="document.getElementById('inquiryModal').querySelector('[data-bs-dismiss]')?.click(); new bootstrap.Modal(document.getElementById('inquiryModal')).show();">
+                        <i class="fas fa-question-circle"></i> Ask About
+                    </button>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.5rem;padding:0.75rem 1rem;background:var(--cream);border-radius:var(--radius-sm);">
+                    <i class="fab fa-whatsapp" style="color:#25D366;font-size:1.2rem;"></i>
+                    <span style="font-size:0.85rem;color:var(--text-medium);">"Order Now" redirects to WhatsApp for easy ordering</span>
+                </div>
+
+                <!-- Rate this product -->
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div style="background:var(--cream);padding:1.25rem;border-radius:var(--radius);margin-bottom:1.5rem;">
+                        <h6 style="font-weight:700;margin-bottom:0.75rem;">Rate This Product</h6>
+                        <form id="ratingForm" onsubmit="submitRating(event, @Model.Id)">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" id="ratingValue" name="rating" value="@(userRating?.Rating ?? 0)" />
+                            <div class="rating-stars-interactive">
+                                @for (int i = 5; i >= 1; i--)
+                                {
+                                    <input type="radio" name="starRating" id="star@(i)" value="@i" @(userRating?.Rating == i ? "checked" : "") />
+                                    <label for="star@(i)"><i class="fas fa-star"></i></label>
+                                }
+                            </div>
+                            <button type="submit" class="btn-gold mt-2" style="padding:0.5rem 1.25rem;font-size:0.85rem;">
+                                <i class="fas fa-star"></i> @(userRating != null ? "Update Rating" : "Submit Rating")
+                            </button>
+                            @if (Model.TotalRatings >= 5 && userRating != null)
+                            {
+                                <small style="display:block;color:var(--text-light);margin-top:0.4rem;"><i class="fas fa-info-circle"></i> You can increase but not decrease the rating after 5 reviews.</small>
+                            }
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <div style="background:var(--cream);padding:1rem;border-radius:var(--radius);margin-bottom:1rem;text-align:center;">
+                        <a asp-area="Identity" asp-page="/Account/Login" style="color:var(--gold);font-weight:600;"><i class="fas fa-sign-in-alt"></i> Login to rate this product</a>
+                    </div>
+                }
+
+                <!-- Share -->
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <span style="font-size:0.8rem;font-weight:600;color:var(--text-medium);">SHARE:</span>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=@Uri.EscapeDataString(Context.Request.Scheme+"://"+Context.Request.Host+Context.Request.Path)" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#1877F2;color:white;display:flex;align-items:center;justify-content:center;"><i class="fab fa-facebook-f" style="font-size:0.85rem;"></i></a>
+                    <a href="https://wa.me/?text=@Uri.EscapeDataString(Model.Name+" - "+Context.Request.Scheme+"://"+Context.Request.Host+Context.Request.Path)" target="_blank" style="width:34px;height:34px;border-radius:50%;background:#25D366;color:white;display:flex;align-items:center;justify-content:center;"><i class="fab fa-whatsapp" style="font-size:0.85rem;"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Description -->
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <div style="margin-top:3rem;padding:2rem;background:var(--cream);border-radius:var(--radius);">
+                <h3 style="margin-bottom:1rem;">Product Description</h3>
+                <div style="color:var(--text-medium);line-height:1.8;">@Html.Raw(Model.Description)</div>
+            </div>
+        }
+
+        <!-- Reviews Section -->
+        <div style="margin-top:3rem;">
+            <h3 style="margin-bottom:1.5rem;">Customer Reviews (@Model.Reviews?.Count())</h3>
+            @if (Model.Reviews?.Any() == true)
+            {
+                <div class="row g-3">
+                    @foreach (var review in Model.Reviews)
+                    {
+                        <div class="col-12 col-md-6">
+                            <div class="review-card">
+                                <div class="review-quote">&ldquo;</div>
+                                <p class="review-text">@review.ReviewText</p>
+                                <div class="reviewer-name">@(review.ReviewerName ?? "Anonymous")</div>
+                                <div style="font-size:0.75rem;color:var(--text-light);">@review.CreatedAt.ToString("MMM dd, yyyy")</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p style="color:var(--text-light);font-style:italic;">No reviews yet. Be the first to review!</p>
+            }
+        </div>
+
+        <!-- Related Products -->
+        @if (relatedProducts.Any())
+        {
+            <div style="margin-top:4rem;">
+                <h3 style="margin-bottom:1.5rem;">Related Products</h3>
+                <div class="row g-3">
+                    @foreach (var rp in relatedProducts)
+                    {
+                        var rpImg = rp.Images?.FirstOrDefault(i => i.IsMain) ?? rp.Images?.FirstOrDefault();
+                        var rpWa = Uri.EscapeDataString($"Hello! I'm interested in: {rp.Name}");
+                        <div class="col-6 col-md-3">
+                            <div class="product-card">
+                                <div class="product-card-img">
+                                    @if (rpImg != null) { <img src="@rpImg.ImagePath" alt="@rp.Name" loading="lazy" /> }
+                                    else { <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--cream-dark);"><i class="fas fa-couch" style="font-size:2.5rem;color:var(--gold-light);"></i></div> }
+                                </div>
+                                <div class="product-card-body">
+                                    <div class="product-card-name" style="font-size:0.95rem;">@rp.Name</div>
+                                    <div class="product-card-actions">
+                                        <a href="/product/@rp.Slug" class="btn-view-detail" style="font-size:0.8rem;"><i class="fas fa-eye"></i> View</a>
+                                        <a href="https://wa.me/@(rp.WhatsAppNumber?.Replace("+",""))/?text=@rpWa" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Product Inquiry Modal -->
+<div class="modal fade modal-bd" id="inquiryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-question-circle me-2"></i>Ask About This Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="inquiryForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="ProductId" value="@Model.Id" />
+                    <input type="hidden" name="ProductName" value="@Model.Name" />
+                    <div class="mb-3">
+                        <div style="padding:0.75rem;background:var(--cream);border-radius:var(--radius-sm);font-size:0.875rem;color:var(--text-medium);">
+                            <i class="fas fa-tag" style="color:var(--gold);"></i> Inquiry about: <strong>@Model.Name</strong>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label-bd">Your Name *</label>
+                            <input type="text" name="InquirerName" class="form-control-bd" placeholder="Enter your name" required />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label-bd">Email Address *</label>
+                            <input type="email" name="Email" class="form-control-bd" placeholder="Enter your email" required />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label-bd">Phone Number</label>
+                            <input type="tel" name="PhoneNumber" class="form-control-bd" placeholder="+880 1XXX-XXXXXX" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label-bd">Subject</label>
+                            <input type="text" name="Subject" class="form-control-bd" value="Inquiry: @Model.Name" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label-bd">Your Message *</label>
+                            <textarea name="Message" class="form-control-bd" rows="4" placeholder="What would you like to know about this product?" required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-gold w-100 mt-3" style="justify-content:center;">
+                        <i class="fas fa-paper-plane"></i> Send Inquiry
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    // Thumbnail gallery
+    document.querySelectorAll('.product-thumb').forEach(thumb => {
+        thumb.addEventListener('click', function() {
+            const mainImg = document.getElementById('mainProductImg');
+            if (mainImg) {
+                mainImg.style.opacity = '0';
+                setTimeout(() => { mainImg.src = this.dataset.imgSrc; mainImg.style.opacity = '1'; }, 150);
+                mainImg.style.transition = 'opacity 0.3s ease';
+            }
+            document.querySelectorAll('.product-thumb').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Star rating
+    document.querySelectorAll('.rating-stars-interactive input[type=radio]').forEach(input => {
+        input.addEventListener('change', function() {
+            document.getElementById('ratingValue').value = this.value;
+        });
+    });
+
+    async function submitRating(e, productId) {
+        e.preventDefault();
+        const rating = document.getElementById('ratingValue').value;
+        if (!rating || rating == 0) { showToast('Please select a rating.', 'error'); return; }
+        try {
+            const fd = new FormData();
+            fd.append('productId', productId);
+            fd.append('rating', rating);
+            fd.append('__RequestVerificationToken', document.querySelector('input[name=__RequestVerificationToken]').value);
+            const res = await fetch('/Product/Rate', { method: 'POST', body: fd });
+            const data = await res.json();
+            if (data.success) {
+                showToast(`Rating submitted! Average: ${parseFloat(data.average).toFixed(1)} ⭐`, 'success');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showToast(data.message, 'error');
+            }
+        } catch { showToast('Error submitting rating.', 'error'); }
+    }
+    </script>
+}

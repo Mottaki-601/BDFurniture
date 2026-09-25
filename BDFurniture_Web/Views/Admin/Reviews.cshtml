@@ -1,0 +1,74 @@
+@model List<BDFurniture_Web.Models.ProductReview>
+@{
+    ViewData["Title"] = "Customer Reviews - BD Furniture Admin";
+}
+
+<div class="page-hero" style="padding-top:6rem;padding-bottom:2rem;">
+    <div class="container">
+        <h1><i class="fas fa-star me-2" style="color:var(--gold);"></i> Customer Reviews Management</h1>
+        <p style="color:rgba(255,255,255,0.75);">Moderate, approve, and manage customer product reviews.</p>
+    </div>
+</div>
+
+<section class="section-pad">
+    <div class="container">
+        <div class="admin-card">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product</th>
+                                <th>Reviewer</th>
+                                <th>Review Text</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in Model)
+                            {
+                                <tr>
+                                    <td><strong>@r.Product?.Name</strong></td>
+                                    <td>@(r.ReviewerName ?? "Anonymous")</td>
+                                    <td style="max-width:350px;">
+                                        <p class="mb-0 text-muted fst-italic">"@r.ReviewText"</p>
+                                    </td>
+                                    <td>
+                                        @if (r.IsApproved)
+                                        {
+                                            <span class="badge bg-success">Approved</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        }
+                                    </td>
+                                    <td><small>@r.CreatedAt.ToString("MMM dd, yyyy")</small></td>
+                                    <td class="text-end">
+                                        @if (!r.IsApproved)
+                                        {
+                                            <form asp-action="ApproveReview" asp-route-id="@r.Id" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-success me-1">Approve</button>
+                                            </form>
+                                        }
+                                        <form asp-action="DeleteReview" asp-route-id="@r.Id" method="post" class="d-inline" onsubmit="return confirm('Delete this review?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted text-center py-4">No reviews submitted yet.</p>
+            }
+        </div>
+    </div>
+</section>
+

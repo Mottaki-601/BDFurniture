@@ -1,0 +1,135 @@
+@model BDFurniture_Web.Models.Product
+@{
+    ViewData["Title"] = "Edit Product - BD Furniture Admin";
+    var categories = ViewBag.Categories as List<BDFurniture_Web.Models.Category> ?? new();
+}
+
+<div class="page-hero" style="padding-top:6rem;padding-bottom:2rem;">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-bd">
+                <li class="breadcrumb-item"><a asp-action="Index">Dashboard</a></li>
+                <li class="breadcrumb-item"><a asp-action="Products">Products</a></li>
+                <li class="breadcrumb-item active">Edit @Model.Name</li>
+            </ol>
+        </nav>
+        <h1><i class="fas fa-edit me-2" style="color:var(--gold);"></i> Edit Product</h1>
+    </div>
+</div>
+
+<section class="section-pad">
+    <div class="container">
+        <div class="admin-card mb-4">
+            <h4 class="mb-3">Existing Photos</h4>
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                <div class="row g-3">
+                    @foreach (var img in Model.Images)
+                    {
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                            <div class="card position-relative shadow-sm">
+                                <img src="@img.ImagePath" class="card-img-top" style="height:120px;object-fit:cover;" />
+                                @if (img.IsMain)
+                                {
+                                    <span class="position-absolute top-0 start-0 badge bg-gold m-1">Cover</span>
+                                }
+                                <div class="card-body p-1 text-center">
+                                    <a asp-action="DeleteImage" asp-route-imageId="@img.Id" asp-route-productId="@Model.Id" 
+                                       class="btn btn-sm btn-outline-danger w-100 py-0" onclick="return confirm('Delete this photo?');">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No photos uploaded for this product yet.</p>
+            }
+        </div>
+
+        <div class="admin-card">
+            <form asp-action="EditProduct" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-4">
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Name" class="form-label-bd">Product Name *</label>
+                        <input asp-for="Name" class="form-control-bd" required />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label-bd">Select Subcategory *</label>
+                        <select asp-for="SubCategoryId" class="form-control-bd" required>
+                            @foreach (var cat in categories)
+                            {
+                                <optgroup label="@cat.Name">
+                                    @foreach (var sub in cat.SubCategories)
+                                    {
+                                        <option value="@sub.Id" selected="@(sub.Id == Model.SubCategoryId)">@sub.Name</option>
+                                    }
+                                </optgroup>
+                            }
+                        </select>
+                        <span asp-validation-for="SubCategoryId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Price" class="form-label-bd">Regular Price (৳)</label>
+                        <input asp-for="Price" type="number" step="0.01" class="form-control-bd" />
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label asp-for="DiscountPrice" class="form-label-bd">Discount Price (৳)</label>
+                        <input asp-for="DiscountPrice" type="number" step="0.01" class="form-control-bd" />
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label asp-for="WhatsAppNumber" class="form-label-bd">WhatsApp Number *</label>
+                        <input asp-for="WhatsAppNumber" class="form-control-bd" required />
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="ShortDescription" class="form-label-bd">Short Summary</label>
+                        <input asp-for="ShortDescription" class="form-control-bd" />
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Description" class="form-label-bd">Detailed Description</label>
+                        <textarea asp-for="Description" class="form-control-bd" rows="5"></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label-bd">Add More Images</label>
+                        <input type="file" name="newImages" multiple class="form-control-bd" accept="image/*" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="IsFeatured" id="isFeaturedCheck" />
+                            <label class="form-check-label fw-bold" for="isFeaturedCheck">Showcase on Home Page (Featured)</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="IsActive" id="isActiveCheck" />
+                            <label class="form-check-label fw-bold" for="isActiveCheck">Active in Store</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4 d-flex gap-2">
+                        <button type="submit" class="btn-gold"><i class="fas fa-check me-1"></i> Update Product</button>
+                        <a asp-action="Products" class="btn btn-outline-secondary" style="border-radius:50px;padding:0.75rem 2rem;">Back to List</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,135 @@
+@{
+    ViewData["Title"] = "Admin Dashboard - BD Furniture";
+}
+
+<div class="page-hero" style="padding-top:6rem;padding-bottom:2rem;">
+    <div class="container">
+        <h1><i class="fas fa-chart-line me-2" style="color:var(--gold);"></i> Admin Dashboard</h1>
+        <p style="color:rgba(255,255,255,0.75);">Welcome to BD Furniture Store Management Portal.</p>
+    </div>
+</div>
+
+<section class="section-pad">
+    <div class="container">
+        <!-- Quick Stats Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-6 col-lg-3">
+                <div class="admin-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="section-subtitle mb-1">Total Products</span>
+                            <div class="admin-stat-number">@ViewBag.TotalProducts</div>
+                        </div>
+                        <i class="fas fa-couch" style="font-size:2.5rem;color:var(--gold-light);"></i>
+                    </div>
+                    <a asp-action="Products" class="btn btn-sm btn-outline-gold mt-3 w-100">Manage Products</a>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="admin-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="section-subtitle mb-1">Categories</span>
+                            <div class="admin-stat-number">@ViewBag.TotalCategories</div>
+                        </div>
+                        <i class="fas fa-sitemap" style="font-size:2.5rem;color:var(--gold-light);"></i>
+                    </div>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-outline-gold mt-3 w-100">View Categories</a>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="admin-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="section-subtitle mb-1">Unread Inquiries</span>
+                            <div class="admin-stat-number" style="color:#e67e22;">@ViewBag.TotalInquiries</div>
+                        </div>
+                        <i class="fas fa-question-circle" style="font-size:2.5rem;color:var(--gold-light);"></i>
+                    </div>
+                    <a asp-action="Inquiries" class="btn btn-sm btn-outline-gold mt-3 w-100">Check Inquiries</a>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="admin-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="section-subtitle mb-1">Subscribers</span>
+                            <div class="admin-stat-number" style="color:#27ae60;">@ViewBag.TotalSubscribers</div>
+                        </div>
+                        <i class="fas fa-envelope-open-text" style="font-size:2.5rem;color:var(--gold-light);"></i>
+                    </div>
+                    <a asp-action="Messages" class="btn btn-sm btn-outline-gold mt-3 w-100">View Messages</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Quick Actions -->
+        <h3 class="mb-4"><i class="fas fa-tools text-gold me-2"></i> Quick Management</h3>
+        <div class="row g-3 mb-5">
+            <div class="col-12 col-md-4 col-lg-3">
+                <a asp-action="CreateProduct" class="btn-gold w-100 justify-content-center p-3 text-decoration-none">
+                    <i class="fas fa-plus-circle fa-lg"></i> Add New Product
+                </a>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                <a asp-action="Products" class="btn btn-outline-dark w-100 p-3 text-decoration-none" style="border-radius:50px;font-weight:600;">
+                    <i class="fas fa-list me-1 text-gold"></i> Product Catalog
+                </a>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                <a asp-action="Videos" class="btn btn-outline-dark w-100 p-3 text-decoration-none" style="border-radius:50px;font-weight:600;">
+                    <i class="fab fa-youtube me-1 text-danger"></i> YouTube Reels/Videos
+                </a>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                <a asp-action="Settings" class="btn btn-outline-dark w-100 p-3 text-decoration-none" style="border-radius:50px;font-weight:600;">
+                    <i class="fas fa-sliders-h me-1 text-gold"></i> Website Settings
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Contact Messages -->
+        <div class="admin-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">Recent Contact Messages</h4>
+                <a asp-action="Messages" class="btn btn-sm btn-outline-gold">View All Messages</a>
+            </div>
+            @if (ViewBag.RecentMessages != null && ((List<BDFurniture_Web.Models.ContactMessage>)ViewBag.RecentMessages).Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var msg in (List<BDFurniture_Web.Models.ContactMessage>)ViewBag.RecentMessages)
+                            {
+                                <tr>
+                                    <td><strong>@msg.Name</strong></td>
+                                    <td>@msg.Email</td>
+                                    <td>@(msg.PhoneNumber ?? "N/A")</td>
+                                    <td>@msg.Subject</td>
+                                    <td>@msg.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted mb-0">No new messages yet.</p>
+            }
+        </div>
+    </div>
+</section>
+

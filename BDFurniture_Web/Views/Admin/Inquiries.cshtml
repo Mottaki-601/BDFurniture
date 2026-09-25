@@ -1,0 +1,63 @@
+@model List<BDFurniture_Web.Models.ProductInquiry>
+@{
+    ViewData["Title"] = "Product Inquiries - BD Furniture Admin";
+}
+
+<div class="page-hero" style="padding-top:6rem;padding-bottom:2rem;">
+    <div class="container">
+        <h1><i class="fas fa-question-circle me-2" style="color:var(--gold);"></i> Product Inquiries</h1>
+        <p style="color:rgba(255,255,255,0.75);">Questions submitted by potential customers from product pages.</p>
+    </div>
+</div>
+
+<section class="section-pad">
+    <div class="container">
+        <div class="admin-card">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Customer Name</th>
+                                <th>Contact Details</th>
+                                <th>Inquiry Message</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var i in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-gold text-white p-2">@i.ProductName</span>
+                                    </td>
+                                    <td><strong>@i.InquirerName</strong></td>
+                                    <td>
+                                        <div><i class="fas fa-envelope text-muted me-1"></i> <a href="mailto:@i.Email">@i.Email</a></div>
+                                        @if (!string.IsNullOrEmpty(i.PhoneNumber))
+                                        {
+                                            <div class="mt-1"><i class="fas fa-phone text-muted me-1"></i> <a href="tel:@i.PhoneNumber">@i.PhoneNumber</a></div>
+                                            <div><a href="https://wa.me/@(i.PhoneNumber.Replace("+",""))" target="_blank" class="text-success small fw-bold"><i class="fab fa-whatsapp"></i> Chat on WhatsApp</a></div>
+                                        }
+                                    </td>
+                                    <td style="max-width:350px;">
+                                        <div class="fw-bold small text-muted">@i.Subject</div>
+                                        <div style="font-size:0.9rem;">@i.Message</div>
+                                    </td>
+                                    <td><small>@i.CreatedAt.ToString("MMM dd, yyyy")</small></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted py-4 text-center">No product inquiries received yet.</p>
+            }
+        </div>
+    </div>
+</section>
+

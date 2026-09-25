@@ -99,6 +99,877 @@ namespace BDFurniture_Web.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("BDFurniture_Web.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("IconClass")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ImagePath")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7851),
+                            Description = "Complete bedroom furniture solutions",
+                            IconClass = "fas fa-bed",
+                            IsActive = true,
+                            Name = "Bedroom",
+                            Slug = "bedroom",
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7862),
+                            Description = "Elegant living room furniture",
+                            IconClass = "fas fa-couch",
+                            IsActive = true,
+                            Name = "Living Room",
+                            Slug = "living-room",
+                            SortOrder = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7864),
+                            Description = "Stylish dining room furniture",
+                            IconClass = "fas fa-utensils",
+                            IsActive = true,
+                            Name = "Dining Room",
+                            Slug = "dining-room",
+                            SortOrder = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7865),
+                            Description = "Beautiful home decoration items",
+                            IconClass = "fas fa-paint-brush",
+                            IsActive = true,
+                            Name = "Home Decor",
+                            Slug = "home-decor",
+                            SortOrder = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7866),
+                            Description = "Professional interior design services",
+                            IconClass = "fas fa-drafting-compass",
+                            IsActive = true,
+                            Name = "Interior Design",
+                            Slug = "interior-design",
+                            SortOrder = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7867),
+                            Description = "Other furniture and accessories",
+                            IconClass = "fas fa-box",
+                            IsActive = true,
+                            Name = "Others",
+                            Slug = "others",
+                            SortOrder = 6
+                        });
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.ContactMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Subject")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContactMessages");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.NewsletterSubscriber", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("SubscribedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("NewsletterSubscribers");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("AverageRating")
+                        .HasColumnType("decimal(3,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("DiscountPrice")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("ShortDescription")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("SubCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalRatings")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ViewCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WhatsAppNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.HasIndex("SubCategoryId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AltText")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.ProductInquiry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("InquirerName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsResolved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Subject")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductInquiries");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.ProductRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("ProductRatings");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.ProductReview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReviewText")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ReviewerName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("UserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductReviews");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.SiteSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("SettingKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("SettingValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SettingKey")
+                        .IsUnique();
+
+                    b.ToTable("SiteSettings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Company name",
+                            SettingKey = "CompanyName",
+                            SettingValue = "BD Furniture",
+                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7982)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Company address",
+                            SettingKey = "Address",
+                            SettingValue = "Dhaka, Bangladesh",
+                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7984)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Contact phone",
+                            SettingKey = "Phone",
+                            SettingValue = "+880 1XXX-XXXXXX",
+                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8009)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "WhatsApp number (without +)",
+                            SettingKey = "WhatsApp",
+                            SettingValue = "8801XXXXXXXXX",
+                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8010)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Contact email",
+                            SettingKey = "Email",
+                            SettingValue = "info@bdfurniture.com",
+                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8011)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Facebook page",
+                            SettingKey = "Facebook",
+                            SettingValue = "https://facebook.com/bdfurniture",
+                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8011)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "YouTube channel",
+                            SettingKey = "YouTube",
+                            SettingValue = "https://youtube.com/@bdfurniture",
+                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8012)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Hero background video",
+                            SettingKey = "HeroVideoUrl",
+                            SettingValue = "/videos/hero-bg.mp4",
+                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8013)
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Hero watch video YouTube ID",
+                            SettingKey = "WatchVideoYouTubeId",
+                            SettingValue = "dQw4w9WgXcQ",
+                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8014)
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "YouTube channel URL",
+                            SettingKey = "YouTubeChannelUrl",
+                            SettingValue = "https://youtube.com/@bdfurniture",
+                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8014)
+                        });
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.SubCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ImagePath")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("SubCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7936),
+                            IsActive = true,
+                            Name = "Almirah",
+                            Slug = "almirah",
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7939),
+                            IsActive = true,
+                            Name = "Bed",
+                            Slug = "bed",
+                            SortOrder = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7940),
+                            IsActive = true,
+                            Name = "Bedroom Set",
+                            Slug = "bedroom-set",
+                            SortOrder = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7941),
+                            IsActive = true,
+                            Name = "Bedside Table",
+                            Slug = "bedside-table",
+                            SortOrder = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7942),
+                            IsActive = true,
+                            Name = "Dressing Table",
+                            Slug = "dressing-table",
+                            SortOrder = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 1,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7943),
+                            IsActive = true,
+                            Name = "King Chair",
+                            Slug = "king-chair",
+                            SortOrder = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7944),
+                            IsActive = true,
+                            Name = "2+2+1 Sofa",
+                            Slug = "2-2-1-sofa",
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7945),
+                            IsActive = true,
+                            Name = "Center Table",
+                            Slug = "center-table",
+                            SortOrder = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7946),
+                            IsActive = true,
+                            Name = "Corner Sofa",
+                            Slug = "corner-sofa",
+                            SortOrder = 3
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7946),
+                            IsActive = true,
+                            Name = "Single Sofa",
+                            Slug = "single-sofa",
+                            SortOrder = 4
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CategoryId = 2,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7951),
+                            IsActive = true,
+                            Name = "Sofa Set",
+                            Slug = "sofa-set",
+                            SortOrder = 5
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CategoryId = 3,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7951),
+                            IsActive = true,
+                            Name = "All Dining Chair",
+                            Slug = "dining-chair",
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CategoryId = 3,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7952),
+                            IsActive = true,
+                            Name = "Dining Set",
+                            Slug = "dining-set",
+                            SortOrder = 2
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CategoryId = 3,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7953),
+                            IsActive = true,
+                            Name = "Dining Wagon",
+                            Slug = "dining-wagon",
+                            SortOrder = 3
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CategoryId = 3,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7954),
+                            IsActive = true,
+                            Name = "Showcase",
+                            Slug = "showcase",
+                            SortOrder = 4
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CategoryId = 3,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7954),
+                            IsActive = true,
+                            Name = "Dining Table",
+                            Slug = "dining-table",
+                            SortOrder = 5
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CategoryId = 4,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7955),
+                            IsActive = true,
+                            Name = "Wall Art",
+                            Slug = "wall-art",
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CategoryId = 4,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7956),
+                            IsActive = true,
+                            Name = "Curtains",
+                            Slug = "curtains",
+                            SortOrder = 2
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CategoryId = 4,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7957),
+                            IsActive = true,
+                            Name = "Cushions",
+                            Slug = "cushions",
+                            SortOrder = 3
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CategoryId = 4,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7957),
+                            IsActive = true,
+                            Name = "Vase",
+                            Slug = "vase",
+                            SortOrder = 4
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CategoryId = 4,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7958),
+                            IsActive = true,
+                            Name = "Mirror",
+                            Slug = "mirror",
+                            SortOrder = 5
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CategoryId = 5,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7959),
+                            IsActive = true,
+                            Name = "Full Interior",
+                            Slug = "full-interior",
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CategoryId = 5,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7960),
+                            IsActive = true,
+                            Name = "Modular Kitchen",
+                            Slug = "modular-kitchen",
+                            SortOrder = 2
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CategoryId = 5,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7960),
+                            IsActive = true,
+                            Name = "Office Interior",
+                            Slug = "office-interior",
+                            SortOrder = 3
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CategoryId = 6,
+                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7961),
+                            IsActive = true,
+                            Name = "All Others",
+                            Slug = "all-others",
+                            SortOrder = 1
+                        });
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.YouTubeVideo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("YouTubeId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("YouTubeVideos");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -236,6 +1107,72 @@ namespace BDFurniture_Web.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("BDFurniture_Web.Models.Product", b =>
+                {
+                    b.HasOne("BDFurniture_Web.Models.SubCategory", "SubCategory")
+                        .WithMany("Products")
+                        .HasForeignKey("SubCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SubCategory");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.ProductImage", b =>
+                {
+                    b.HasOne("BDFurniture_Web.Models.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.ProductInquiry", b =>
+                {
+                    b.HasOne("BDFurniture_Web.Models.Product", "Product")
+                        .WithMany("Inquiries")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.ProductRating", b =>
+                {
+                    b.HasOne("BDFurniture_Web.Models.Product", "Product")
+                        .WithMany("Ratings")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.ProductReview", b =>
+                {
+                    b.HasOne("BDFurniture_Web.Models.Product", "Product")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.SubCategory", b =>
+                {
+                    b.HasOne("BDFurniture_Web.Models.Category", "Category")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -285,6 +1222,27 @@ namespace BDFurniture_Web.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.Category", b =>
+                {
+                    b.Navigation("SubCategories");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.Product", b =>
+                {
+                    b.Navigation("Images");
+
+                    b.Navigation("Inquiries");
+
+                    b.Navigation("Ratings");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("BDFurniture_Web.Models.SubCategory", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

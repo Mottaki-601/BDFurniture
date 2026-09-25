@@ -1,0 +1,68 @@
+@model List<BDFurniture_Web.Models.SiteSetting>
+@{
+    ViewData["Title"] = "Site Settings - BD Furniture Admin";
+}
+
+<div class="page-hero" style="padding-top:6rem;padding-bottom:2rem;">
+    <div class="container">
+        <h1><i class="fas fa-sliders-h me-2" style="color:var(--gold);"></i> Website Settings</h1>
+        <p style="color:rgba(255,255,255,0.75);">Configure phone numbers, WhatsApp, addresses, social channels, and video links.</p>
+    </div>
+</div>
+
+<section class="section-pad">
+    <div class="container">
+        <div class="admin-card">
+            <h4 class="mb-4">Global Configuration</h4>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:25%;">Setting</th>
+                            <th>Description</th>
+                            <th style="width:40%;">Value</th>
+                            <th style="width:15%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model)
+                        {
+                            <tr>
+                                <td><strong>@s.SettingKey</strong></td>
+                                <td class="text-muted small">@s.Description</td>
+                                <td>
+                                    <input type="text" id="setting_@s.Id" class="form-control form-control-sm" value="@s.SettingValue" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-gold" onclick="saveSetting(@s.Id)">
+                                        <i class="fas fa-save"></i> Save
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        async function saveSetting(id) {
+            const val = document.getElementById('setting_' + id).value;
+            const res = await fetch('/Admin/UpdateSetting', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ id: id, value: val })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('Setting updated successfully!', 'success');
+            } else {
+                showToast('Failed to update setting.', 'error');
+            }
+        }
+    </script>
+}
+

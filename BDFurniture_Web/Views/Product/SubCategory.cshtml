@@ -1,0 +1,63 @@
+@{
+    ViewData["Title"] = (ViewBag.SubCategory as BDFurniture_Web.Models.SubCategory)?.Name + " - BD Furniture";
+    var category = ViewBag.Category as BDFurniture_Web.Models.Category;
+    var subCategory = ViewBag.SubCategory as BDFurniture_Web.Models.SubCategory;
+    var products = ViewBag.Products as List<BDFurniture_Web.Models.Product> ?? new();
+}
+
+<div class="page-hero" style="padding-top:6rem;">
+    <div class="container">
+        <nav aria-label="breadcrumb"><ol class="breadcrumb breadcrumb-bd">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/collection/@category?.Slug">@category?.Name</a></li>
+            <li class="breadcrumb-item active">@subCategory?.Name</li>
+        </ol></nav>
+        <h1 style="margin-top:0.5rem;">@subCategory?.Name</h1>
+        <p style="color:rgba(255,255,255,0.75);">@subCategory?.Description</p>
+    </div>
+</div>
+
+<section class="section-pad">
+    <div class="container">
+        @if (products.Any())
+        {
+            <div class="row g-3 g-md-4">
+                @foreach (var product in products)
+                {
+                    var mainImg = product.Images?.FirstOrDefault(i => i.IsMain) ?? product.Images?.FirstOrDefault();
+                    var waMsg = Uri.EscapeDataString($"Hello! I'm interested in: {product.Name}");
+                    <div class="col-6 col-md-4 col-lg-3 aos-fade-up">
+                        <div class="product-card">
+                            <div class="product-card-img">
+                                @if (product.IsFeatured) { <span class="product-badge">Featured</span> }
+                                @if (mainImg != null) { <img src="@mainImg.ImagePath" alt="@product.Name" loading="lazy" /> }
+                                else { <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--cream-dark);"><i class="fas fa-couch" style="font-size:3rem;color:var(--gold-light);"></i></div> }
+                            </div>
+                            <div class="product-card-body">
+                                <div class="product-card-category">@subCategory?.Name</div>
+                                <div class="product-card-name">@product.Name</div>
+                                <div class="star-rating">
+                                    @for (int i = 1; i <= 5; i++) { <i class="fas fa-star @(i <= (int)product.AverageRating ? "filled" : "")"></i> }
+                                    <span class="rating-count">(@product.TotalRatings)</span>
+                                </div>
+                                @if (product.Price.HasValue) { <div class="product-card-price">৳@(product.DiscountPrice?.ToString("N0") ?? product.Price.Value.ToString("N0"))</div> }
+                                <div class="product-card-actions">
+                                    <a href="/product/@product.Slug" class="btn-view-detail"><i class="fas fa-eye"></i> View Details</a>
+                                    <a href="https://wa.me/@(product.WhatsAppNumber?.Replace("+",""))/?text=@waMsg" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center" style="padding:5rem 0;">
+                <i class="fas fa-box-open" style="font-size:4rem;color:var(--gold-light);"></i>
+                <h3 style="margin-top:1.5rem;">No products in @subCategory?.Name yet</h3>
+                <a href="/collection/@category?.Slug" class="btn-gold mt-3">Back to @category?.Name</a>
+            </div>
+        }
+    </div>
+</section>

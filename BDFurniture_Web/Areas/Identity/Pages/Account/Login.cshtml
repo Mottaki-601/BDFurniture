@@ -1,645 +1,139 @@
-﻿@page
+@page
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Sign In - BD Furniture";
 }
 
-<div class="row">
-    <div class="col-md-6">
-        <section>
-            <form id="account" method="post">
-                <h2 class="display-4">Please Login here...</h2>
-                <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Input.Email" class="form-label">Email</label>
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.Password" class="form-label">Password</label>
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label">
-                        <input class="form-check-input" asp-for="Input.RememberMe" />
-                        @Html.DisplayNameFor(m => m.Input.RememberMe)
-                    </label>
-                </div>
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
-                </div>
-            </form>
-        </section>
-    </div>
-    
-</div>
+<div class="auth-page-wrapper">
+    <div class="container py-5">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12 col-lg-10 col-xl-9">
+                <div class="auth-card shadow-lg">
+                    <div class="row g-0">
+                        <!-- Left Brand Showcase Column -->
+                        <div class="col-12 col-md-5 auth-brand-side d-flex flex-column justify-content-between p-4 p-lg-5 text-white">
+                            <div>
+                                <a href="/" class="auth-logo text-decoration-none">
+                                    <i class="fas fa-couch me-2 text-gold"></i>
+                                    <span class="fw-bold">BD</span> <span class="text-gold">Furniture</span>
+                                </a>
+                                <h3 class="auth-brand-heading mt-4">Welcome Back</h3>
+                                <p class="auth-brand-subtext">
+                                    Sign in to your account to manage orders, submit product ratings, or access store management.
+                                </p>
+                            </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+                            <div class="auth-features d-none d-md-block my-4">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="fas fa-check-circle text-gold"></i>
+                                    <span class="small">100% Solid Seasoned Wood</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="fas fa-check-circle text-gold"></i>
+                                    <span class="small">Direct WhatsApp Ordering</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fas fa-check-circle text-gold"></i>
+                                    <span class="small">Custom Interior Solutions</span>
+                                </div>
+                            </div>
 
-
-
-
-
-@* @page
-@model LoginModel
-@{
-    ViewData["Title"] = "Log in";
-}
-
-<style>
-    body {
-        background-color: #e0e0e0 !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .embossed-login-container {
-        background: #e0e0e0;
-        border-radius: 50%;
-        width: 380px;
-        height: 380px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 50px auto;
-        box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
-        padding: 40px;
-        box-sizing: border-box;
-        position: relative;
-        transition: all 0.3s ease;
-    }
-
-    .login-form-inner {
-        width: 100%;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-
-    .login-title {
-        color: #4d4d4d;
-        font-weight: bold;
-        margin-bottom: 25px;
-        font-size: 24px;
-    }
-
-    .embossed-input {
-        width: 100%;
-        padding: 12px 15px;
-        margin-bottom: 15px;
-        border: none;
-        outline: none;
-        background: #e0e0e0;
-        border-radius: 20px;
-        box-shadow: inset 6px 6px 10px #bebebe, inset -6px -6px 10px #ffffff;
-        color: #555;
-        font-size: 14px;
-        transition: all 0.3s ease;
-    }
-
-    .embossed-input:focus {
-        box-shadow: inset 8px 8px 14px #b8b8b8, inset -8px -8px 14px #ffffff;
-    }
-    
-    .embossed-btn {
-        width: 100%;
-        padding: 12px;
-        background: #e0e0e0;
-        border: none;
-        border-radius: 20px;
-        color: #4d4d4d;
-        font-weight: bold;
-        font-size: 16px;
-        cursor: pointer;
-        margin-top: 10px;
-        box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
-        position: relative;
-        transition: opacity 0.2s ease;
-    }
-
-    /* 💥 বাটনের ভাঙা টুকরো বা কণাগুলোর স্টাইল */
-    .btn-shatter-particle {
-        position: absolute;
-        background: #e0e0e0;
-        border: 1px solid #c8c8c8;
-        box-shadow: inset 1px 1px 2px #ffffff, 2px 2px 5px rgba(0,0,0,0.15);
-        pointer-events: none;
-        z-index: 99;
-        transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
-    }
-
-    .embossed-btn:active {
-        box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff;
-    }
-
-    .extra-links {
-        margin-top: 20px;
-        font-size: 13px;
-    }
-    .extra-links a {
-        color: #666;
-        text-decoration: none;
-        margin: 0 5px;
-    }
-    .extra-links a:hover {
-        text-decoration: underline;
-    }
-    .success-icon-box {
-        width: 70px;
-        height: 70px;
-        background: #e0e0e0;
-        border-radius: 50%;
-        margin: 0 auto 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;
-    }
-    .success-checkmark {
-        font-size: 32px;
-        color: #28a745;
-        text-shadow: 2px 2px 4px #bebebe;
-        animation: scaleUp 0.4s ease-out forwards;
-        transform: scale(0);
-    }
-
-    .success-text {
-        color: #4d4d4d;
-        font-size: 26px;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    .success-subtext {
-        color: #888;
-        font-size: 14px;
-    }
-
-    .d-none {
-        display: none !important;
-    }
-
-    @@keyframes scaleUp {
-        0% { transform: scale(0); }
-        70% { transform: scale(1.2); }
-        100% { transform: scale(1); }
-    }
-</style>
-
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <section>
-            <!-- এরর মেসেজ দেখানোর জন্য কাস্টম বক্স -->
-            <div id="errorMessageContainer" class="text-danger text-center fw-bold mb-2"></div>
-
-            <form id="account" method="post">
-                <div class="embossed-login-container" id="loginCard">
-                    <!-- ১. লগইন ফর্ম স্টেট -->
-                    <div class="login-form-inner" id="loginFormState">
-                        <h2 class="login-title">Login</h2>
-
-                        <div class="mb-3">
-                            <input asp-for="Input.Email" class="embossed-input" autocomplete="username" aria-required="true" placeholder="Username or Email" />
-                            <span asp-validation-for="Input.Email" class="text-danger d-block small"></span>
+                            <div class="auth-brand-footer pt-3 border-top border-white-50">
+                                <small class="text-white-50">&copy; @DateTime.Now.Year BD Furniture. Premium Living.</small>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <input asp-for="Input.Password" class="embossed-input" autocomplete="current-password" aria-required="true" placeholder="Password" />
-                            <span asp-validation-for="Input.Password" class="text-danger d-block small"></span>
-                        </div>
+                        <!-- Right Form Column -->
+                        <div class="col-12 col-md-7 auth-form-side p-4 p-lg-5 bg-white">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div>
+                                    <span class="section-subtitle mb-1">Account Access</span>
+                                    <h2 class="auth-title mb-0">Sign In</h2>
+                                </div>
+                                <div class="text-end">
+                                    <span class="text-muted small">New here?</span><br />
+                                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="auth-link fw-bold">Register</a>
+                                </div>
+                            </div>
 
-                        <!-- সাইন ইন বাটন ও টুকরো হওয়ার এরিয়া -->
-                        <div id="buttonWrapper" style="position: relative; width: 100%;">
-                            <button id="login-submit" type="submit" class="w-100 embossed-btn">Sign In</button>
-                        </div>
+                            @if (!ViewData.ModelState.IsValid && ViewData.ModelState[string.Empty]?.Errors.Count > 0)
+                            {
+                                <div class="alert alert-danger py-2 px-3 small rounded-3 mb-4" role="alert">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger mb-0 d-inline" })
+                                </div>
+                            }
 
-                    </div>
-                    
-                    <!-- ২. সাকসেস স্টেট -->
-                    <div class="login-form-inner d-none" id="loginSuccessState">
-                        <div class="success-icon-box">
-                            <div class="success-checkmark">✓</div>
+                            <form id="account" method="post">
+                                <div class="mb-3">
+                                    <label asp-for="Input.Email" class="form-label-bd">Email Address</label>
+                                    <div class="auth-input-group">
+                                        <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                                        <input asp-for="Input.Email" class="form-control-bd ps-5" autocomplete="username" placeholder="name@example.com" required />
+                                    </div>
+                                    <span asp-validation-for="Input.Email" class="text-danger small mt-1 d-block"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <label asp-for="Input.Password" class="form-label-bd mb-0">Password</label>
+                                        <a id="forgot-password" asp-page="./ForgotPassword" class="text-muted small text-decoration-none">Forgot password?</a>
+                                    </div>
+                                    <div class="auth-input-group position-relative">
+                                        <span class="input-icon"><i class="fas fa-lock"></i></span>
+                                        <input asp-for="Input.Password" type="password" id="loginPasswordInput" class="form-control-bd ps-5 pe-5" autocomplete="current-password" placeholder="••••••••" required />
+                                        <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility('loginPasswordInput', this)">
+                                            <i class="fas fa-eye text-muted"></i>
+                                        </button>
+                                    </div>
+                                    <span asp-validation-for="Input.Password" class="text-danger small mt-1 d-block"></span>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" asp-for="Input.RememberMe" id="rememberMeCheck" />
+                                        <label class="form-check-label text-muted small" for="rememberMeCheck">
+                                            Remember my login
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button id="login-submit" type="submit" class="btn-gold w-100 py-3 justify-content-center text-uppercase fw-bold letter-spacing-1">
+                                    <i class="fas fa-sign-in-alt me-2"></i> Sign In to Account
+                                </button>
+                            </form>
+
+                            <div class="text-center mt-4 pt-3 border-top">
+                                <span class="text-muted small">Don't have an account yet?</span>
+                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-outline-dark btn-sm ms-2" style="border-radius:50px;">
+                                    Create Account
+                                </a>
+                            </div>
                         </div>
-                        <div class="success-text">Success!</div>
-                        <div class="success-subtext">Login Successfully</div>
                     </div>
                 </div>
-
-                <div class="text-center mt-3">
-                    <div class="checkbox mb-2">
-                        <label asp-for="Input.RememberMe" class="form-label text-secondary">
-                            <input class="form-check-input" asp-for="Input.RememberMe" />
-                            @Html.DisplayNameFor(m => m.Input.RememberMe)
-                        </label>
-                    </div>
-                    
-                    <div class="extra-links">
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot password?</a> | 
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register</a> | 
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend confirmation</a>
-                    </div>
-                </div>
-            </form>
-        </section>
-    </div>
-</div> *@
-
-
-
-
-@*@page
- @model LoginModel
-@{
-    ViewData["Title"] = "Log in";
-}
-
-<style>
-    body {
-        background-color: #e0e0e0 !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    /* বৃত্তাকার কার্ডের ভেতর লোগো পজিশন করার জন্য আপডেট */
-    .embossed-login-container {
-        background: #e0e0e0;
-        border-radius: 50%;
-        width: 380px;
-        height: 380px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 50px auto;
-        box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
-        padding: 40px;
-        box-sizing: border-box;
-        position: relative; 
-        overflow: hidden; /* এর ফলে লোগো বৃত্তের বাইরে যাবে না */
-    }
-
-    /* 🏢 কোম্পানির হালকা অরিজিনাল কালার ব্যাকগ্রাউন্ড লোগো */
-    .company-bg-logo {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100%; /* লোগোটি পুরো সার্কেল জুড়ে থাকবে */
-        height: 100%; /* পুরো সার্কেল কাভার করার জন্য */
-        object-fit: cover; /* ইমেজটি যেন সার্কেলের ভেতর সুন্দরভাবে ফিট হয় */
-        border-radius: 50%; /* ইমেজটিকে সার্কেল শেপ দেওয়ার জন্য */
-        opacity: 0.15; /* লোগোর ট্রান্সপারেন্সি হালকা করার জন্য (প্রয়োজনে এটি পরিবর্তন করতে পারেন) */
-        pointer-events: none; 
-        z-index: 0; 
-    }
-
-    /* ফর্মের ভেতরের এলিমেন্টগুলো যেন লোগোর ওপরে থাকে এবং সব কিছু মাঝে থাকে */
-    .login-form-inner {
-        width: 100%;
-        max-width: 290px; /* ইনপুট ফিল্ড ও বাটনগুলোর উইডথ সার্কেলের মাঝে সুন্দর দেখানোর জন্য */
-        text-align: center;
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin: 0 auto;
-    }
-
-    .login-title {
-        color: #4d4d4d;
-        font-weight: bold;
-        margin-bottom: 25px;
-        font-size: 24px;
-        width: 100%;
-    }
-
-    .input-wrapper-custom {
-        width: 100%;
-        margin-bottom: 15px;
-    }
-
-    /* 📝 ইনপুট ফিল্ডের ভেতরের দিকে এমবসড শ্যাডো এবং ব্যাকগ্রাউন্ড ট্রান্সপারেন্ট (যাতে লোগো দেখা যায়) */
-    .embossed-input {
-        width: 100%;
-        padding: 12px 20px;
-        border: none;
-        outline: none;
-        background: transparent; /* ইনপুট ফিল্ডের ব্যাকগ্রাউন্ড ট্রান্সপারেন্ট করা হলো যেন লোগোটি ভেতরেও দেখা যায় */
-        border-radius: 20px;
-        box-shadow: inset 6px 6px 10px #bebebe, inset -6px -6px 10px #ffffff;
-        color: #555;
-        font-size: 14px;
-        transition: all 0.3s ease;
-        box-sizing: border-box;
-        text-align: left;
-    }
-
-    .embossed-input:focus {
-        box-shadow: inset 8px 8px 14px #b8b8b8, inset -8px -8px 14px #ffffff;
-    }
-    
-    /* 🔘 বোতামের ডিজাইন ও মিডল পজিশন */
-    .button-wrapper-custom {
-        width: 100%;
-        position: relative;
-    }
-
-    .embossed-btn {
-        width: 100%;
-        padding: 12px;
-        background: rgba(224, 224, 224, 0.8); /* হালকা ব্লেন্ডিং ব্যাকগ্রাউন্ড */
-        border: none;
-        border-radius: 20px;
-        color: #4d4d4d;
-        font-weight: bold;
-        font-size: 16px;
-        cursor: pointer;
-        margin-top: 10px;
-        box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
-        position: relative;
-        transition: opacity 0.2s ease, box-shadow 0.2s ease;
-        box-sizing: border-box;
-    }
-
-    /* 💥 বাটনের ভাঙা টুকরো বা কণাগুলোর স্টাইল */
-    .btn-shatter-particle {
-        position: absolute;
-        background: #e0e0e0;
-        border: 1px solid #c8c8c8;
-        box-shadow: inset 1px 1px 2px #ffffff, 2px 2px 5px rgba(0,0,0,0.15);
-        pointer-events: none;
-        z-index: 99;
-        transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
-    }
-
-    .embossed-btn:active {
-        box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff;
-    }
-
-    .extra-links {
-        margin-top: 20px;
-        font-size: 13px;
-    }
-    .extra-links a {
-        color: #666;
-        text-decoration: none;
-        margin: 0 5px;
-    }
-    .extra-links a:hover {
-        text-decoration: underline;
-    }
-    .success-icon-box {
-        width: 70px;
-        height: 70px;
-        background: #e0e0e0;
-        border-radius: 50%;
-        margin: 0 auto 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;
-    }
-    .success-checkmark {
-        font-size: 32px;
-        color: #28a745;
-        text-shadow: 2px 2px 4px #bebebe;
-        animation: scaleUp 0.4s ease-out forwards;
-        transform: scale(0);
-    }
-
-    .success-text {
-        color: #4d4d4d;
-        font-size: 26px;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    .success-subtext {
-        color: #888;
-        font-size: 14px;
-    }
-
-    .d-none {
-        display: none !important;
-    }
-
-    @@keyframes scaleUp {
-        0% { transform: scale(0); }
-        70% { transform: scale(1.2); }
-        100% { transform: scale(1); }
-    }
-</style>
-
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <section>
-            <div id="errorMessageContainer" class="text-danger text-center fw-bold mb-2"></div>
-
-            <form id="account" method="post">
-                <!-- মূল এমবসড গোলাকার কার্ড -->
-                <div class="embossed-login-container" id="loginCard">
-
-                    <!-- 🏢 কোম্পানির লোগো ইমেজ -->
-                    <img src="~/images/logo.jpg" class="company-bg-logo" alt="Company Logo" />
-
-                    <!-- ১. লগইন ফর্ম স্টেট -->
-                    <div class="login-form-inner" id="loginFormState">
-                        <h2 class="login-title">Login</h2>
-
-                        <div class="input-wrapper-custom">
-                            <input asp-for="Input.Email" class="embossed-input" autocomplete="username" aria-required="true" placeholder="Username or Email" />
-                            <span asp-validation-for="Input.Email" class="text-danger d-block small mt-1"></span>
-                        </div>
-
-                        <div class="input-wrapper-custom">
-                            <input asp-for="Input.Password" class="embossed-input" autocomplete="current-password" aria-required="true" placeholder="Password" />
-                            <span asp-validation-for="Input.Password" class="text-danger d-block small mt-1"></span>
-                        </div>
-
-                        <!-- সাইন ইন বাটন ও টুকরো হওয়ার এরিয়া -->
-                        <div id="buttonWrapper" class="button-wrapper-custom">
-                            <button id="login-submit" type="submit" class="embossed-btn">Sign In</button>
-                        </div>
-                    </div>
-                    
-                    <!-- ২. সাকসেস স্টেট -->
-                    <div class="login-form-inner d-none" id="loginSuccessState">
-                        <div class="success-icon-box">
-                            <div class="success-checkmark">✓</div>
-                        </div>
-                        <div class="success-text">Success!</div>
-                        <div class="success-subtext">Login Successfully</div>
-                    </div>
-                </div>
-
-                <div class="text-center mt-3">
-                    <div class="checkbox mb-2">
-                        <label asp-for="Input.RememberMe" class="form-label text-secondary">
-                            <input class="form-check-input" asp-for="Input.RememberMe" />
-                            @Html.DisplayNameFor(m => m.Input.RememberMe)
-                        </label>
-                    </div>
-                    
-                    <div class="extra-links">
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot password?</a> | 
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register</a> | 
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend confirmation</a>
-                    </div>
-                </div>
-            </form>
-        </section>
+            </div>
+        </div>
     </div>
 </div>
-
-
-
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        let isPasswordWrong = false;
-        const submitBtn = document.getElementById("login-submit");
-        const buttonWrapper = document.getElementById("buttonWrapper");
-        let particles = [];
-
-        function shatterButton() {
-            if (particles.length > 0) return;
-
-            submitBtn.style.opacity = "0";
-            submitBtn.style.pointerEvents = "none";
-
-            const rect = submitBtn.getBoundingClientRect();
-            const wrapperRect = buttonWrapper.getBoundingClientRect();
-
-            const leftOffset = rect.left - wrapperRect.left;
-            const topOffset = rect.top - wrapperRect.top;
-
-            const rows = 4;
-            const cols = 8;
-            const pWidth = rect.width / cols;
-            const pHeight = rect.height / rows;
-
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    const particle = document.createElement("div");
-                    particle.classList.add("btn-shatter-particle");
-
-                    particle.style.width = pWidth + "px";
-                    particle.style.height = pHeight + "px";
-                    particle.style.left = (leftOffset + c * pWidth) + "px";
-                    particle.style.top = (topOffset + r * pHeight) + "px";
-
-                    if((r === 0 || r === rows - 1) && (c === 0 || c === cols - 1)) {
-                        particle.style.borderRadius = "5px";
-                    }
-
-                    const randX = (Math.random() - 0.5) * 160;
-                    const randY = (Math.random() - 0.5) * 100 - 30;
-                    const randRot = (Math.random() - 0.5) * 360;
-
-                    buttonWrapper.appendChild(particle);
-                    particles.push(particle);
-
-                    setTimeout(function() {
-                        particle.style.transform = "translate(" + randX + "px, " + randY + "px) rotate(" + randRot + "deg) scale(0.6)";
-                        particle.style.opacity = "0.3";
-                    }, 20);
-                }
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         }
-
-        function repairButton() {
-            if (particles.length === 0) return;
-
-            particles.forEach(function(p) {
-                p.style.transform = "translate(0px, 0px) rotate(0deg) scale(1)";
-                p.style.opacity = "1";
-            });
-
-            setTimeout(function() {
-                particles.forEach(function(p) { p.remove(); });
-                particles = [];
-                submitBtn.style.opacity = "1";
-                submitBtn.style.pointerEvents = "auto";
-            }, 500);
-        }
-
-        document.getElementById("account").addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            if (!jQuery(this).valid()) return;
-
-            const form = jQuery(this);
-            const actionUrl = form.attr('action') || window.location.href;
-            const formData = form.serialize();
-
-            jQuery.ajax({
-                type: "POST",
-                url: actionUrl,
-                data: formData,
-                success: function (response) {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(response, 'text/html');
-                    const hasValidationSummaryError = doc.querySelector('.text-danger ul li') !== null || response.includes("Invalid login attempt");
-
-                    if (hasValidationSummaryError) {
-                        isPasswordWrong = true;
-                        jQuery('#errorMessageContainer').html('⚠ Invalid login attempt. Please check your password!');
-                        shatterButton();
-                    } else {
-                        isPasswordWrong = false;
-                        repairButton();
-                        jQuery('#errorMessageContainer').html('');
-
-                        document.getElementById("loginFormState").classList.add("d-none");
-                        document.getElementById("loginSuccessState").classList.remove("d-none");
-
-                        setTimeout(function () {
-                            const urlParams = new URLSearchParams(window.location.search);
-                            const returnUrl = urlParams.get('returnUrl') || '/';
-                            window.location.href = returnUrl;
-                        }, 2000);
-                    }
-                },
-                error: function () {
-                    jQuery('#errorMessageContainer').html('⚠ Connection error. Try again.');
-                }
-            });
-        });
-
-        submitBtn.addEventListener("mouseenter", function() {
-            if (isPasswordWrong) {
-                shatterButton();
-            }
-        });
-
-        buttonWrapper.addEventListener("mouseleave", function() {
-            if (isPasswordWrong) {
-                repairButton();
-            }
-        });
-
-        document.querySelectorAll('.embossed-input').forEach(function(input) {
-            input.addEventListener('input', function() {
-                if (isPasswordWrong) {
-                    isPasswordWrong = false;
-                    repairButton();
-                    jQuery('#errorMessageContainer').html('');
-                }
-            });
-        });
     </script>
-} *@
+}
+
