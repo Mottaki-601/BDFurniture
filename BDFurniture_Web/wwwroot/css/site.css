@@ -256,12 +256,37 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
 .mega-menu-link i { color: var(--gold); width: 16px; }
 
 /* Mobile Toggler */
+/*.navbar-toggler {
+    border: 2px solid rgba(255,255,255,0.5) !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 0.3rem 0.6rem !important;
+}
+.navbar-toggler-icon { filter: invert(1); }*/
+
+/* Mobile Toggler */
 .navbar-toggler {
     border: 2px solid rgba(255,255,255,0.5) !important;
     border-radius: var(--radius-sm) !important;
     padding: 0.3rem 0.6rem !important;
 }
-.navbar-toggler-icon { filter: invert(1); }
+
+.navbar-toggler-icon {
+    background-image: none !important;
+    width: 24px;
+    height: 18px;
+    position: relative;
+}
+
+    .navbar-toggler-icon::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 24px;
+        height: 2px;
+        background-color: #fff;
+        box-shadow: 0 8px 0 #fff, 0 16px 0 #fff;
+    }
 
 /* ===== HERO SECTION ===== */
 .hero-section {

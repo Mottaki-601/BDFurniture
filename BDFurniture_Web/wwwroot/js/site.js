@@ -1,4 +1,4 @@
-// BD Furniture - Main JavaScript
+﻿// BD Furniture - Main JavaScript
 'use strict';
 
 // ===== NAVBAR SCROLL BEHAVIOR =====
@@ -242,3 +242,37 @@ if (heroVideo) {
     });
 }
 
+
+//Menue hide 
+document.addEventListener("DOMContentLoaded", function () {
+
+    const toggler = document.querySelector(".navbar-toggler");
+    const menu = document.querySelector(".navbar-collapse");
+
+    if (!toggler || !menu) return;
+
+    document.addEventListener("click", function (event) {
+
+        // Menu বর্তমানে open কিনা
+        if (!menu.classList.contains("show")) {
+            return;
+        }
+
+        // Toggle button অথবা menu-এর ভিতরে click করলে কিছু করবো না
+        if (
+            toggler.contains(event.target) ||
+            menu.contains(event.target)
+        ) {
+            return;
+        }
+
+        // বাইরে click করলে menu বন্ধ
+        const collapse = bootstrap.Collapse.getInstance(menu);
+
+        if (collapse) {
+            collapse.hide();
+        }
+
+    });
+
+});
