@@ -141,7 +141,7 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
 
 /* ===== NAVBAR ===== */
 .navbar-main {
-    position: fixed;
+    position:fixed;
     top: 0; left: 0; right: 0;
     z-index: 1000;
     padding: 1rem 0;
@@ -178,7 +178,7 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
 }
 .navbar-main .nav-link::after {
     content: '';
-    position: absolute;
+    position:fixed;
     bottom: 0; left: 50%;
     transform: translateX(-50%);
     width: 0; height: 2px;
@@ -209,9 +209,9 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
 }
 .mega-menu {
     display: none;
-    position: fixed;
+    position: absolute;
     left: 0; right: 0;
-    top: 100%;
+    top: calc(100%-1px);
     background: var(--white);
     box-shadow: var(--shadow-lg);
     border-top: 3px solid var(--gold);
@@ -1254,4 +1254,3 @@ label.form-label-bd {
 .aos-delay-2 { transition-delay: 0.2s; }
 .aos-delay-3 { transition-delay: 0.3s; }
 .aos-delay-4 { transition-delay: 0.4s; }
-}
