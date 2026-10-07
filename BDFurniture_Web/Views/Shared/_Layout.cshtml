@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="BD Furniture - Premium Quality Furniture for Your Home" />
+    <link rel="icon" type="image/png" sizes="32x32" href="~/images/logo_black.jpg" />
     <title>@ViewData["Title"] - BD Furniture</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,9 +17,14 @@
 <body>
 <nav class="navbar-main navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+        @* <a class="navbar-brand" asp-controller="Home" asp-action="Index">
             <i class="fas fa-couch me-2" style="color: var(--gold);"></i>BD <span>Furniture</span>
-        </a>
+        </a> *@
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                <img src="~/images/logo_black.jpg" alt="BD Furniture Logo" style="height: 40px; width: auto; margin-right: 8px; border-radius:50%;" />
+                BD <span>Furniture</span>
+            </a>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>

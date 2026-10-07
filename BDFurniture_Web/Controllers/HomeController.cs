@@ -1,5 +1,6 @@
 using BDFurniture_Web.Data;
 using BDFurniture_Web.Models;
+using BDFurniture_Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,11 +10,13 @@ namespace BDFurniture_Web.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly ILogger<HomeController> _logger;
+        private readonly IYouTubeService _youTubeService;
 
-        public HomeController(ApplicationDbContext db, ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext db, ILogger<HomeController> logger, IYouTubeService youTubeService)
         {
             _db = db;
             _logger = logger;
+            _youTubeService = youTubeService;
         }
 
         public async Task<IActionResult> Index()
