@@ -40,7 +40,7 @@
                             <a class="mega-menu-link" href="/collection/bedroom/bed"><i class="fas fa-bed"></i> Bed</a>
                             <a class="mega-menu-link" href="/collection/bedroom/bedroom-set"><i class="fas fa-layer-group"></i> Bedroom Set</a>
                             <a class="mega-menu-link" href="/collection/bedroom/bedside-table"><i class="fas fa-table"></i> Bedside Table</a>
-                            <a class="mega-menu-link" href="/collection/bedroom/dressing-table"><i class="fas fa-mirror"></i> Dressing Table</a>
+                            <a class="mega-menu-link" href="/collection/bedroom/dressing-table"><i class="fa-solid fa-paint-brush"></i> Dressing Table</a>
                             <a class="mega-menu-link" href="/collection/bedroom/king-chair"><i class="fas fa-chair"></i> King Chair</a>
                             <a class="mega-menu-link" asp-controller="Product" asp-action="Category" asp-route-slug="bedroom"><i class="fas fa-arrow-right"></i> <strong>View All Bedroom</strong></a>
                         </div></div></div>
@@ -68,7 +68,7 @@
                             <a class="mega-menu-link" href="/collection/dining-room/dining-chair"><i class="fas fa-chair"></i> Dining Chair</a>
                             <a class="mega-menu-link" href="/collection/dining-room/dining-set"><i class="fas fa-layer-group"></i> Dining Set</a>
                             <a class="mega-menu-link" href="/collection/dining-room/dining-wagon"><i class="fas fa-cart-flatbed"></i> Dining Wagon</a>
-                            <a class="mega-menu-link" href="/collection/dining-room/showcase"><i class="fas fa-cabinet-filing"></i> Showcase</a>
+                            <a class="mega-menu-link" href="/collection/dining-room/showcase"><i class="fa-solid fa-kitchen-set"></i> Showcase</a>
                             <a class="mega-menu-link" href="/collection/dining-room/dining-table"><i class="fas fa-table"></i> Dining Table</a>
                             <a class="mega-menu-link" asp-controller="Product" asp-action="Category" asp-route-slug="dining-room"><i class="fas fa-arrow-right"></i> <strong>View All Dining</strong></a>
                         </div></div></div>
@@ -175,6 +175,37 @@
             <div class="modal-header"><h5 class="modal-title"><i class="fab fa-youtube me-2"></i>BD Furniture</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <div class="modal-body p-0">
                 <div style="position:relative;padding-bottom:56.25%;height:0;"><iframe id="ytIframe" src="" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dedicated Shorts Reel Modal Player -->
+<div class="modal fade modal-shorts-player" id="shortsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span class="badge-yt-short"><i class="fab fa-youtube"></i> SHORT</span>
+                    <span id="shortsModalTitle" class="text-truncate ms-2" style="max-width:210px;font-size:0.9rem;">BD Furniture Short</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="shorts-iframe-container">
+                    <iframe id="shortsIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="shorts-player-controls">
+                <button type="button" class="shorts-control-btn" onclick="navigateShort(-1)">
+                    <i class="fas fa-step-backward"></i> Prev
+                </button>
+                <a id="shortsModalYtLink" href="#" target="_blank" rel="noopener noreferrer" class="shorts-control-btn text-decoration-none">
+                    <i class="fab fa-youtube text-danger"></i> YouTube
+                </a>
+                <button type="button" class="shorts-control-btn" onclick="navigateShort(1)">
+                    Next <i class="fas fa-step-forward"></i>
+                </button>
             </div>
         </div>
     </div>

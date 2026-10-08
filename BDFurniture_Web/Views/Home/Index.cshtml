@@ -10,6 +10,11 @@
     var whatsapp = GetSetting("WhatsApp");
     var watchVideoId = GetSetting("WatchVideoYouTubeId");
     var ytChannelUrl = GetSetting("YouTubeChannelUrl");
+    var shorts =
+    ViewBag.YouTubeShorts
+    as List<BDFurniture_Web.Services.YouTubeShortDto>
+    ?? new();
+    var nextPageToken = ViewBag.NextPageToken as string;
 }
 
 <!-- ===================== HERO SECTION ===================== -->
@@ -200,64 +205,246 @@
     </div>
 </section>
 
-<!-- ===================== YOUTUBE SECTION ===================== -->
-<section class="section-pad youtube-section">
+<!-- ===================== YOUTUBE SHORTS & REELS SHOWCASE ===================== -->
+<section class="section-pad youtube-shorts-section" id="reels">
     <div class="container">
+        <!-- Section Header -->
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
             <div>
-                <span class="section-subtitle">✦ Our Channel</span>
-                <h2 class="mb-0">Watch Our Videos</h2>
+                <span class="section-subtitle">✦ Craftsmanship &amp; Showroom Tours</span>
+                <h2 class="mb-1" style="color:var(--white);font-family:var(--font-primary);">Watch Our Shorts &amp; Reels</h2>
+                <p class="mb-0 text-white-50" style="font-size:0.9rem;">
+                    Solid wood finishing, modern sofa crafting, and customer home deliveries directly from YouTube.
+                </p>
             </div>
-            @if (!string.IsNullOrEmpty(ytChannelUrl))
-            {
-                <a href="@ytChannelUrl" target="_blank" class="btn-outline-gold flex-shrink-0">
-                    <i class="fab fa-youtube"></i> View Channel
-                </a>
-            }
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="shorts-nav-btn" data-scroll-target="#shortsTrack" data-scroll-dir="left" title="Previous Shorts" aria-label="Previous">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button type="button" class="shorts-nav-btn" data-scroll-target="#shortsTrack" data-scroll-dir="right" title="Next Shorts" aria-label="Next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                @if (!string.IsNullOrEmpty(nextPageToken))
+                {
+                    <button type="button" id="btnLoadMoreShortsHeader" class="btn-outline-gold d-none d-md-inline-flex align-items-center gap-1" style="padding:0.45rem 1rem;font-size:0.8rem;" onclick="loadMoreShorts()" title="Load more videos">
+                        <i class="fas fa-sync-alt"></i> Load More
+                    </button>
+                }
+                @if (!string.IsNullOrEmpty(ytChannelUrl))
+                {
+                    <a href="@ytChannelUrl" target="_blank" rel="noopener noreferrer" class="btn-gold ms-2 d-none d-sm-inline-flex" style="padding:0.6rem 1.4rem;font-size:0.85rem;">
+                        <i class="fab fa-youtube"></i> Visit Channel
+                    </a>
+                }
+            </div>
         </div>
 
-        @if (ytVideos.Any())
+        @if (shorts.Any())
         {
-            <div class="video-scroll-wrap">
-                <div class="video-scroll-track" id="videoTrack">
-                    @foreach (var video in ytVideos)
+            <!-- Shorts Horizontal Scroll Track -->
+            <div class="shorts-scroll-wrapper">
+                <div class="shorts-scroll-track" id="shortsTrack">
+                    @for (int i = 0; i < shorts.Count; i++)
                     {
-                        var thumb = string.IsNullOrEmpty(video.ThumbnailUrl)
-                            ? $"https://img.youtube.com/vi/{video.YouTubeId}/hqdefault.jpg"
-                            : video.ThumbnailUrl;
-                        <div class="yt-card" onclick="openYouTubeModal('@video.YouTubeId')">
-                            <div class="yt-thumb">
-                                <img src="@thumb" alt="@video.Title" loading="lazy" />
-                                <div class="yt-play-btn"><i class="fas fa-play"></i></div>
+                        var shortVideo = shorts[i];
+                        var cleanTitle = (shortVideo.Title ?? "BD Furniture").Replace("\"", "&quot;").Replace("'", "\\'");
+                        var isNew = i < 2; // First 2 newest uploaded videos get glowing NEW badge
+
+                        <div class="short-reel-card aos-fade-up" onclick="openShortsModal('@shortVideo.VideoId', '@cleanTitle', @i)">
+                            <div class="short-reel-thumb">
+                                <img src="@shortVideo.ThumbnailUrl" alt="@shortVideo.Title" loading="lazy" decoding="async" />
                             </div>
-                            <div class="yt-info">
-                                <h5>@video.Title</h5>
-                                @if (!string.IsNullOrEmpty(video.Description))
-                                {
-                                    <p>@video.Description</p>
-                                }
+                            <div class="short-reel-overlay">
+                                <div class="short-badges">
+                                    <span class="badge-yt-short"><i class="fab fa-youtube"></i> SHORT</span>
+                                    @if (isNew)
+                                    {
+                                        <span class="badge-new-reel"><i class="fas fa-fire"></i> NEW</span>
+                                    }
+                                </div>
+
+                                <div class="short-play-center">
+                                    <i class="fas fa-play"></i>
+                                </div>
+
+                                <div class="short-reel-content">
+                                    <div class="short-reel-title">@shortVideo.Title</div>
+                                    <div class="short-reel-meta">
+                                        <span><i class="far fa-calendar-alt me-1"></i>@shortVideo.PublishedAt.ToString("dd MMM yyyy")</span>
+                                        <span class="short-watch-hint">Watch <i class="fas fa-play-circle"></i></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     }
+
+                    <!-- Sentinel and Loading Indicator for Lazy Load on Scroll -->
+                    <div id="shortsSentinel" class="shorts-sentinel" data-next-token="@nextPageToken">
+                        <div id="shortsLoader" class="shorts-loader-card @(string.IsNullOrEmpty(nextPageToken) ? "d-none" : "")">
+                            <div class="shorts-loader-spinner"><i class="fas fa-spinner fa-spin"></i></div>
+                            <span>Loading more...</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="scroll-controls">
-                <button class="scroll-btn" data-scroll-target="#videoTrack" data-scroll-dir="left">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="scroll-btn" data-scroll-target="#videoTrack" data-scroll-dir="right">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+
+            <!-- Bottom Track Bar -->
+            <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+                <div class="text-white-50" style="font-size:0.82rem;">
+                    <i class="fas fa-arrows-left-right me-1 text-gold"></i> Scroll or drag to see all shorts from our workshop
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    @if (!string.IsNullOrEmpty(nextPageToken))
+                    {
+                        <button type="button" id="btnLoadMoreShortsBottom" class="btn-outline-gold d-inline-flex align-items-center gap-1" style="padding:0.45rem 1.2rem;font-size:0.82rem;" onclick="loadMoreShorts()">
+                            <i class="fas fa-plus-circle"></i> Load More Shorts
+                        </button>
+                    }
+                    @if (!string.IsNullOrEmpty(ytChannelUrl))
+                    {
+                        <a href="@ytChannelUrl" target="_blank" rel="noopener noreferrer" class="btn-gold d-inline-flex align-items-center gap-1" style="padding:0.45rem 1.2rem;font-size:0.82rem;">
+                            <i class="fab fa-youtube"></i> Visit Channel
+                        </a>
+                    }
+                </div>
             </div>
+
+            <script>
+                window.shortsData = [
+                    @foreach (var s in shorts)
+                    {
+                        <text>{ videoId: '@s.VideoId', title: '@s.Title.Replace("\"", "\\\"").Replace("\'", "\\\'")' },</text>
+                    }
+                ];
+                window.nextShortsPageToken = '@nextPageToken';
+                window.isFetchingShorts = false;
+
+                function createShortCardElement(s, index) {
+                    const card = document.createElement('div');
+                    card.className = 'short-reel-card aos-fade-up visible';
+                    const cleanTitle = (s.title || 'BD Furniture Short').replace(/"/g, '&quot;');
+                    const cleanJsTitle = (s.title || 'BD Furniture Short').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                    card.setAttribute('onclick', `openShortsModal('${s.videoId}', '${cleanJsTitle}', ${index})`);
+                    card.innerHTML = `
+                        <div class="short-reel-thumb">
+                            <img src="${s.thumbnailUrl}" alt="${cleanTitle}" loading="lazy" decoding="async" />
+                        </div>
+                        <div class="short-reel-overlay">
+                            <div class="short-badges">
+                                <span class="badge-yt-short"><i class="fab fa-youtube"></i> SHORT</span>
+                            </div>
+                            <div class="short-play-center">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="short-reel-content">
+                                <div class="short-reel-title">${cleanTitle}</div>
+                                <div class="short-reel-meta">
+                                    <span><i class="far fa-calendar-alt me-1"></i>${s.publishedAt || ''}</span>
+                                    <span class="short-watch-hint">Watch <i class="fas fa-play-circle"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    return card;
+                }
+
+                async function loadMoreShorts() {
+                    if (window.isFetchingShorts || !window.nextShortsPageToken) return;
+                    window.isFetchingShorts = true;
+
+                    const loader = document.getElementById('shortsLoader');
+                    const sentinel = document.getElementById('shortsSentinel');
+                    const btnHeader = document.getElementById('btnLoadMoreShortsHeader');
+                    const btnBottom = document.getElementById('btnLoadMoreShortsBottom');
+
+                    if (loader) loader.classList.remove('d-none');
+                    if (btnHeader) { btnHeader.disabled = true; btnHeader.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...'; }
+                    if (btnBottom) { btnBottom.disabled = true; btnBottom.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...'; }
+
+                    try {
+                        const res = await fetch(`/Home/GetMoreShorts?pageToken=${encodeURIComponent(window.nextShortsPageToken)}`);
+                        const data = await res.json();
+
+                        if (data && data.success && data.shorts && data.shorts.length > 0) {
+                            window.nextShortsPageToken = data.nextPageToken || '';
+                            const track = document.getElementById('shortsTrack');
+
+                            data.shorts.forEach(s => {
+                                const newIdx = window.shortsData.length;
+                                window.shortsData.push({ videoId: s.videoId, title: s.title });
+                                const cardEl = createShortCardElement(s, newIdx);
+                                if (sentinel && track.contains(sentinel)) {
+                                    track.insertBefore(cardEl, sentinel);
+                                } else {
+                                    track.appendChild(cardEl);
+                                }
+                            });
+
+                            if (!window.nextShortsPageToken) {
+                                if (sentinel) sentinel.innerHTML = '<div class="shorts-end-pill"><i class="fas fa-check-circle me-1"></i> All Shorts Loaded</div>';
+                                if (btnHeader) btnHeader.classList.add('d-none');
+                                if (btnBottom) btnBottom.classList.add('d-none');
+                            }
+                        } else {
+                            window.nextShortsPageToken = '';
+                            if (sentinel) sentinel.innerHTML = '<div class="shorts-end-pill"><i class="fas fa-check-circle me-1"></i> All Shorts Loaded</div>';
+                            if (btnHeader) btnHeader.classList.add('d-none');
+                            if (btnBottom) btnBottom.classList.add('d-none');
+                        }
+                    } catch (err) {
+                        console.error('Failed to load more shorts:', err);
+                    } finally {
+                        window.isFetchingShorts = false;
+                        if (loader && window.nextShortsPageToken) loader.classList.add('d-none');
+                        if (btnHeader && window.nextShortsPageToken) {
+                            btnHeader.disabled = false;
+                            btnHeader.innerHTML = '<i class="fas fa-sync-alt"></i> Load More';
+                        }
+                        if (btnBottom && window.nextShortsPageToken) {
+                            btnBottom.disabled = false;
+                            btnBottom.innerHTML = '<i class="fas fa-plus-circle"></i> Load More Shorts';
+                        }
+                    }
+                }
+                window.loadMoreShorts = loadMoreShorts;
+
+                // Auto Trigger 1: Horizontal scroll near end
+                const trackEl = document.getElementById('shortsTrack');
+                if (trackEl) {
+                    trackEl.addEventListener('scroll', () => {
+                        if (trackEl.scrollLeft + trackEl.clientWidth >= trackEl.scrollWidth - 300) {
+                            loadMoreShorts();
+                        }
+                    }, { passive: true });
+                }
+
+                // Auto Trigger 2: Intersection Observer on sentinel
+                const sentinelEl = document.getElementById('shortsSentinel');
+                if (sentinelEl && trackEl && 'IntersectionObserver' in window) {
+                    const shortsObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                loadMoreShorts();
+                            }
+                        });
+                    }, {
+                        root: trackEl,
+                        rootMargin: '0px 200px 0px 0px',
+                        threshold: 0.05
+                    });
+                    shortsObserver.observe(sentinelEl);
+                }
+            </script>
         }
         else
         {
-            <div style="text-align:center;padding:3rem;opacity:0.5;">
-                <i class="fab fa-youtube" style="font-size:4rem;color:var(--gold);"></i>
-                <p style="margin-top:1rem;color:rgba(255,255,255,0.6);">Videos will appear here once added by admin.</p>
+            <div style="text-align:center;padding:3rem;opacity:0.6;">
+                <i class="fab fa-youtube" style="font-size:3.5rem;color:var(--gold);"></i>
+                <p style="margin-top:1rem;color:rgba(255,255,255,0.75);">Shorts &amp; videos will appear here once connected to YouTube channel.</p>
                 @if (!string.IsNullOrEmpty(ytChannelUrl))
                 {
-                    <a href="@ytChannelUrl" target="_blank" class="btn-outline-gold mt-2"><i class="fab fa-youtube"></i> Visit Our Channel</a>
+                    <a href="@ytChannelUrl" target="_blank" class="btn-outline-gold mt-2"><i class="fab fa-youtube"></i> Visit Our YouTube Channel</a>
                 }
             </div>
         }

@@ -1,4 +1,4 @@
-﻿namespace BDFurniture_Web.Services
+namespace BDFurniture_Web.Services
 {
     public class YouTubeShortDto
     {
@@ -14,5 +14,14 @@
 
         public string VideoUrl =>
             $"https://www.youtube.com/shorts/{VideoId}";
+    }
+
+    public class YouTubeShortsPagedResult
+    {
+        public List<YouTubeShortDto> Shorts { get; set; } = new();
+
+        public string? NextPageToken { get; set; }
+
+        public int TotalResults { get; set; }
     }
 }

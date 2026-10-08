@@ -3,6 +3,7 @@ using BDFurniture_Web.Models;
 using BDFurniture_Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BDFurniture_Web.Controllers
 {
@@ -11,12 +12,14 @@ namespace BDFurniture_Web.Controllers
         private readonly ApplicationDbContext _db;
         private readonly ILogger<HomeController> _logger;
         private readonly IYouTubeService _youTubeService;
+        private readonly IMemoryCache _memoryCache;
 
-        public HomeController(ApplicationDbContext db, ILogger<HomeController> logger, IYouTubeService youTubeService)
+        public HomeController(ApplicationDbContext db, ILogger<HomeController> logger, IYouTubeService youTubeService, IMemoryCache memoryCache)
         {
             _db = db;
             _logger = logger;
             _youTubeService = youTubeService;
+            _memoryCache = memoryCache;
         }
 
         public async Task<IActionResult> Index()
@@ -35,6 +38,53 @@ namespace BDFurniture_Web.Controllers
                 .Take(8)
                 .ToListAsync();
 
+            // YouTube Channel URL
+            var ytChannelUrl = await _db.SiteSettings
+                .Where(x => x.SettingKey == "YouTubeChannelUrl")
+                .Select(x => x.SettingValue)
+                .FirstOrDefaultAsync() ?? "https://youtube.com/@bdfurniture";
+
+            // Cache First Page of YouTube Shorts for 30 minutes for blazing fast speed
+            var cacheKey = $"YT_ShortsPage_{ytChannelUrl}_first";
+            if (!_memoryCache.TryGetValue(cacheKey, out YouTubeShortsPagedResult? pagedShorts) || pagedShorts == null || !pagedShorts.Shorts.Any())
+            {
+                pagedShorts = await _youTubeService.GetPagedShortsAsync(ytChannelUrl, null, 12);
+                if (pagedShorts != null && pagedShorts.Shorts.Any())
+                {
+                    _memoryCache.Set(cacheKey, pagedShorts, TimeSpan.FromMinutes(30));
+                }
+            }
+
+            var shorts = pagedShorts?.Shorts ?? new List<YouTubeShortDto>();
+            var nextPageToken = pagedShorts?.NextPageToken;
+
+            // Fallback to database YouTubeVideos if API returned empty
+            if (!shorts.Any())
+            {
+                var dbVideos = await _db.YouTubeVideos
+                    .Where(v => v.IsActive)
+                    .OrderBy(v => v.SortOrder)
+                    .ToListAsync();
+
+                shorts = dbVideos.Select(v => new YouTubeShortDto
+                {
+                    VideoId = v.YouTubeId,
+                    Title = v.Title,
+                    Description = v.Description,
+                    ThumbnailUrl = string.IsNullOrEmpty(v.ThumbnailUrl)
+                        ? $"https://img.youtube.com/vi/{v.YouTubeId}/hqdefault.jpg"
+                        : v.ThumbnailUrl,
+                    PublishedAt = v.CreatedAt
+                }).ToList();
+            }
+
+            // Ensure newly uploaded videos are first
+            shorts = shorts.OrderByDescending(s => s.PublishedAt).ToList();
+
+            ViewBag.YouTubeShorts = shorts;
+            ViewBag.NextPageToken = nextPageToken;
+            ViewBag.YouTubeChannelUrl = ytChannelUrl;
+
             ViewBag.YouTubeVideos = await _db.YouTubeVideos
                 .Where(v => v.IsActive)
                 .OrderBy(v => v.SortOrder)
@@ -49,6 +99,54 @@ namespace BDFurniture_Web.Controllers
             ViewBag.Settings = await _db.SiteSettings.ToListAsync();
 
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMoreShorts(string? pageToken = null)
+        {
+            try
+            {
+                var ytChannelUrl = await _db.SiteSettings
+                    .Where(x => x.SettingKey == "YouTubeChannelUrl")
+                    .Select(x => x.SettingValue)
+                    .FirstOrDefaultAsync() ?? "https://youtube.com/@bdfurniture";
+
+                var cacheKey = $"YT_ShortsPage_{ytChannelUrl}_{pageToken ?? "first"}";
+                if (!_memoryCache.TryGetValue(cacheKey, out YouTubeShortsPagedResult? pagedShorts) || pagedShorts == null)
+                {
+                    pagedShorts = await _youTubeService.GetPagedShortsAsync(ytChannelUrl, pageToken, 12);
+                    if (pagedShorts != null && pagedShorts.Shorts.Any())
+                    {
+                        _memoryCache.Set(cacheKey, pagedShorts, TimeSpan.FromMinutes(30));
+                    }
+                }
+
+                if (pagedShorts == null || !pagedShorts.Shorts.Any())
+                {
+                    return Json(new { success = true, shorts = Array.Empty<object>(), nextPageToken = (string?)null });
+                }
+
+                var items = pagedShorts.Shorts.Select(s => new
+                {
+                    videoId = s.VideoId,
+                    title = s.Title,
+                    thumbnailUrl = s.ThumbnailUrl,
+                    publishedAt = s.PublishedAt.ToString("dd MMM yyyy"),
+                    videoUrl = s.VideoUrl
+                });
+
+                return Json(new
+                {
+                    success = true,
+                    shorts = items,
+                    nextPageToken = pagedShorts.NextPageToken
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching more YouTube shorts with pageToken: {PageToken}", pageToken);
+                return Json(new { success = false, message = "Could not load more shorts." });
+            }
         }
 
         public IActionResult Career()
@@ -103,3 +201,4 @@ namespace BDFurniture_Web.Controllers
         }
     }
 }
+

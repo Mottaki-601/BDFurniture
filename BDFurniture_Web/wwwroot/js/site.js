@@ -1,4 +1,4 @@
-﻿// BD Furniture - Main JavaScript
+// BD Furniture - Main JavaScript
 'use strict';
 
 // ===== NAVBAR SCROLL BEHAVIOR =====
@@ -62,13 +62,21 @@ function initDragScroll(trackSelector) {
     });
 }
 initDragScroll('.video-scroll-track');
+initDragScroll('#shortsTrack');
 
 // Scroll buttons
 document.querySelectorAll('[data-scroll-target]').forEach(btn => {
     btn.addEventListener('click', function() {
         const target = document.querySelector(this.dataset.scrollTarget);
         const dir = this.dataset.scrollDir === 'left' ? -1 : 1;
-        if (target) target.scrollBy({ left: dir * 320, behavior: 'smooth' });
+        if (target) {
+            target.scrollBy({ left: dir * 320, behavior: 'smooth' });
+            if (dir > 0 && target.id === 'shortsTrack' && typeof window.loadMoreShorts === 'function') {
+                if (target.scrollLeft + target.clientWidth >= target.scrollWidth - 600) {
+                    window.loadMoreShorts();
+                }
+            }
+        }
     });
 });
 
@@ -78,12 +86,51 @@ function openYouTubeModal(videoId) {
     const iframe = document.getElementById('ytIframe');
     if (modal && iframe) {
         iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-        const bsModal = new bootstrap.Modal(modal);
+        const bsModal = bootstrap.Modal.getOrCreateInstance(modal);
         bsModal.show();
         modal.addEventListener('hidden.bs.modal', () => { iframe.src = ''; }, { once: true });
     }
 }
 window.openYouTubeModal = openYouTubeModal;
+
+// ===== DEDICATED SHORTS REEL MODAL PLAYER =====
+let currentShortIndex = 0;
+
+function openShortsModal(videoId, title, index) {
+    const modal = document.getElementById('shortsModal');
+    const iframe = document.getElementById('shortsIframe');
+    const titleEl = document.getElementById('shortsModalTitle');
+    const ytLink = document.getElementById('shortsModalYtLink');
+    if (!modal || !iframe) return;
+
+    currentShortIndex = typeof index === 'number' ? index : 0;
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    if (titleEl) titleEl.textContent = title || 'BD Furniture Short';
+    if (ytLink) ytLink.href = `https://www.youtube.com/shorts/${videoId}`;
+
+    const bsModal = bootstrap.Modal.getOrCreateInstance(modal);
+    bsModal.show();
+
+    modal.addEventListener('hidden.bs.modal', () => {
+        iframe.src = '';
+    }, { once: true });
+}
+window.openShortsModal = openShortsModal;
+
+function navigateShort(direction) {
+    if (!window.shortsData || !window.shortsData.length) return;
+
+    if (direction > 0 && currentShortIndex >= window.shortsData.length - 2 && typeof window.loadMoreShorts === 'function') {
+        window.loadMoreShorts();
+    }
+
+    currentShortIndex = (currentShortIndex + direction + window.shortsData.length) % window.shortsData.length;
+    const nextItem = window.shortsData[currentShortIndex];
+    if (nextItem) {
+        openShortsModal(nextItem.videoId, nextItem.title, currentShortIndex);
+    }
+}
+window.navigateShort = navigateShort;
 
 // ===== PRODUCT IMAGE GALLERY =====
 document.querySelectorAll('.product-thumb').forEach(thumb => {

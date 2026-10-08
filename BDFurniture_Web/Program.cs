@@ -1,4 +1,5 @@
 using BDFurniture_Web.Data;
+using BDFurniture_Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,10 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddMemoryCache();
+
+builder.Services.AddScoped<IYouTubeService, YouTubeService>();
 
 var app = builder.Build();
 
