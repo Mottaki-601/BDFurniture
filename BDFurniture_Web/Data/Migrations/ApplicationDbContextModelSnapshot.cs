@@ -149,7 +149,7 @@ namespace BDFurniture_Web.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7851),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7840),
                             Description = "Complete bedroom furniture solutions",
                             IconClass = "fas fa-bed",
                             IsActive = true,
@@ -160,7 +160,7 @@ namespace BDFurniture_Web.Data.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7862),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7853),
                             Description = "Elegant living room furniture",
                             IconClass = "fas fa-couch",
                             IsActive = true,
@@ -171,7 +171,7 @@ namespace BDFurniture_Web.Data.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7864),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7854),
                             Description = "Stylish dining room furniture",
                             IconClass = "fas fa-utensils",
                             IsActive = true,
@@ -182,7 +182,7 @@ namespace BDFurniture_Web.Data.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7865),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7855),
                             Description = "Beautiful home decoration items",
                             IconClass = "fas fa-paint-brush",
                             IsActive = true,
@@ -193,7 +193,7 @@ namespace BDFurniture_Web.Data.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7866),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7856),
                             Description = "Professional interior design services",
                             IconClass = "fas fa-drafting-compass",
                             IsActive = true,
@@ -204,7 +204,7 @@ namespace BDFurniture_Web.Data.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7867),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7857),
                             Description = "Other furniture and accessories",
                             IconClass = "fas fa-box",
                             IsActive = true,
@@ -380,6 +380,9 @@ namespace BDFurniture_Web.Data.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<bool>("IsBackground")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
@@ -554,7 +557,7 @@ namespace BDFurniture_Web.Data.Migrations
                             Description = "Company name",
                             SettingKey = "CompanyName",
                             SettingValue = "BD Furniture",
-                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7982)
+                            UpdatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7987)
                         },
                         new
                         {
@@ -562,7 +565,7 @@ namespace BDFurniture_Web.Data.Migrations
                             Description = "Company address",
                             SettingKey = "Address",
                             SettingValue = "Dhaka, Bangladesh",
-                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7984)
+                            UpdatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7990)
                         },
                         new
                         {
@@ -570,7 +573,7 @@ namespace BDFurniture_Web.Data.Migrations
                             Description = "Contact phone",
                             SettingKey = "Phone",
                             SettingValue = "+880 1XXX-XXXXXX",
-                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8009)
+                            UpdatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7990)
                         },
                         new
                         {
@@ -578,7 +581,7 @@ namespace BDFurniture_Web.Data.Migrations
                             Description = "WhatsApp number (without +)",
                             SettingKey = "WhatsApp",
                             SettingValue = "8801XXXXXXXXX",
-                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8010)
+                            UpdatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7991)
                         },
                         new
                         {
@@ -586,7 +589,7 @@ namespace BDFurniture_Web.Data.Migrations
                             Description = "Contact email",
                             SettingKey = "Email",
                             SettingValue = "info@bdfurniture.com",
-                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8011)
+                            UpdatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7992)
                         },
                         new
                         {
@@ -594,7 +597,7 @@ namespace BDFurniture_Web.Data.Migrations
                             Description = "Facebook page",
                             SettingKey = "Facebook",
                             SettingValue = "https://facebook.com/bdfurniture",
-                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8011)
+                            UpdatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7993)
                         },
                         new
                         {
@@ -602,7 +605,7 @@ namespace BDFurniture_Web.Data.Migrations
                             Description = "YouTube channel",
                             SettingKey = "YouTube",
                             SettingValue = "https://youtube.com/@bdfurniture",
-                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8012)
+                            UpdatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7993)
                         },
                         new
                         {
@@ -610,7 +613,7 @@ namespace BDFurniture_Web.Data.Migrations
                             Description = "Hero background video",
                             SettingKey = "HeroVideoUrl",
                             SettingValue = "/videos/hero-bg.mp4",
-                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8013)
+                            UpdatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7994)
                         },
                         new
                         {
@@ -618,7 +621,7 @@ namespace BDFurniture_Web.Data.Migrations
                             Description = "Hero watch video YouTube ID",
                             SettingKey = "WatchVideoYouTubeId",
                             SettingValue = "dQw4w9WgXcQ",
-                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8014)
+                            UpdatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7995)
                         },
                         new
                         {
@@ -626,7 +629,7 @@ namespace BDFurniture_Web.Data.Migrations
                             Description = "YouTube channel URL",
                             SettingKey = "YouTubeChannelUrl",
                             SettingValue = "https://youtube.com/@bdfurniture",
-                            UpdatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(8014)
+                            UpdatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7995)
                         });
                 });
 
@@ -640,6 +643,10 @@ namespace BDFurniture_Web.Data.Migrations
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("CoverImagePath")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -682,7 +689,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7936),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7923),
                             IsActive = true,
                             Name = "Almirah",
                             Slug = "almirah",
@@ -692,7 +699,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 2,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7939),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7926),
                             IsActive = true,
                             Name = "Bed",
                             Slug = "bed",
@@ -702,7 +709,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 3,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7940),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7927),
                             IsActive = true,
                             Name = "Bedroom Set",
                             Slug = "bedroom-set",
@@ -712,7 +719,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 4,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7941),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7928),
                             IsActive = true,
                             Name = "Bedside Table",
                             Slug = "bedside-table",
@@ -722,7 +729,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 5,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7942),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7929),
                             IsActive = true,
                             Name = "Dressing Table",
                             Slug = "dressing-table",
@@ -732,7 +739,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 6,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7943),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7930),
                             IsActive = true,
                             Name = "King Chair",
                             Slug = "king-chair",
@@ -742,7 +749,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 7,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7944),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7931),
                             IsActive = true,
                             Name = "2+2+1 Sofa",
                             Slug = "2-2-1-sofa",
@@ -752,7 +759,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 8,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7945),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7932),
                             IsActive = true,
                             Name = "Center Table",
                             Slug = "center-table",
@@ -762,7 +769,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 9,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7946),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7933),
                             IsActive = true,
                             Name = "Corner Sofa",
                             Slug = "corner-sofa",
@@ -772,7 +779,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 10,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7946),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7933),
                             IsActive = true,
                             Name = "Single Sofa",
                             Slug = "single-sofa",
@@ -782,7 +789,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 11,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7951),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7934),
                             IsActive = true,
                             Name = "Sofa Set",
                             Slug = "sofa-set",
@@ -792,7 +799,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 12,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7951),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7936),
                             IsActive = true,
                             Name = "All Dining Chair",
                             Slug = "dining-chair",
@@ -802,7 +809,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 13,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7952),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7936),
                             IsActive = true,
                             Name = "Dining Set",
                             Slug = "dining-set",
@@ -812,7 +819,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 14,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7953),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7937),
                             IsActive = true,
                             Name = "Dining Wagon",
                             Slug = "dining-wagon",
@@ -822,7 +829,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 15,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7954),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7938),
                             IsActive = true,
                             Name = "Showcase",
                             Slug = "showcase",
@@ -832,7 +839,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 16,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7954),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7939),
                             IsActive = true,
                             Name = "Dining Table",
                             Slug = "dining-table",
@@ -842,7 +849,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 17,
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7955),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7940),
                             IsActive = true,
                             Name = "Wall Art",
                             Slug = "wall-art",
@@ -852,7 +859,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 18,
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7956),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7940),
                             IsActive = true,
                             Name = "Curtains",
                             Slug = "curtains",
@@ -862,7 +869,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 19,
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7957),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7941),
                             IsActive = true,
                             Name = "Cushions",
                             Slug = "cushions",
@@ -872,7 +879,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 20,
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7957),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7942),
                             IsActive = true,
                             Name = "Vase",
                             Slug = "vase",
@@ -882,7 +889,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 21,
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7958),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7943),
                             IsActive = true,
                             Name = "Mirror",
                             Slug = "mirror",
@@ -892,7 +899,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 22,
                             CategoryId = 5,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7959),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7943),
                             IsActive = true,
                             Name = "Full Interior",
                             Slug = "full-interior",
@@ -902,7 +909,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 23,
                             CategoryId = 5,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7960),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7944),
                             IsActive = true,
                             Name = "Modular Kitchen",
                             Slug = "modular-kitchen",
@@ -912,7 +919,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 24,
                             CategoryId = 5,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7960),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7945),
                             IsActive = true,
                             Name = "Office Interior",
                             Slug = "office-interior",
@@ -922,7 +929,7 @@ namespace BDFurniture_Web.Data.Migrations
                         {
                             Id = 25,
                             CategoryId = 6,
-                            CreatedAt = new DateTime(2026, 9, 24, 17, 44, 9, 607, DateTimeKind.Local).AddTicks(7961),
+                            CreatedAt = new DateTime(2026, 10, 11, 16, 45, 22, 47, DateTimeKind.Local).AddTicks(7946),
                             IsActive = true,
                             Name = "All Others",
                             Slug = "all-others",
