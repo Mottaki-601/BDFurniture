@@ -4,6 +4,7 @@
     var relatedProducts = ViewBag.RelatedProducts as List<BDFurniture_Web.Models.Product> ?? new();
     var userRating = ViewBag.UserRating as BDFurniture_Web.Models.ProductRating;
     var mainImg = Model.Images?.FirstOrDefault(i => i.IsMain) ?? Model.Images?.FirstOrDefault();
+    var bgImage = Model.Images?.FirstOrDefault(i => i.IsBackground || i.AltText == "background");
     var waMsg = Uri.EscapeDataString($"Hello! I'm interested in: {Model.Name}. Please share more details.");
 }
 
@@ -24,29 +25,71 @@
 
             <!-- Image Gallery Column -->
             <div class="col-12 col-lg-6">
-                <div class="product-detail-img-main">
-                    @if (mainImg != null)
+                @{
+                    var scrollableImages = Model.Images?.Where(i => !(i.IsBackground || i.AltText == "background"))
+                                                       .OrderByDescending(i => i.IsMain)
+                                                       .ThenBy(i => i.SortOrder)
+                                                       .ToList() ?? new List<BDFurniture_Web.Models.ProductImage>();
+
+                    // If no foreground images exist and there is NO background image, fallback to mainImg if available
+                    if (!scrollableImages.Any() && bgImage == null && mainImg != null && !mainImg.IsBackground && mainImg.AltText != "background")
                     {
-                        <img id="mainProductImg" src="@mainImg.ImagePath" alt="@Model.Name" />
+                        scrollableImages.Add(mainImg);
                     }
-                    else
+                }
+                <div class="product-gallery-box @(bgImage != null ? "has-bg-image" : "")" id="galleryBox" tabindex="0">
+                    @if (bgImage != null)
                     {
-                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--cream);">
+                        <!-- Fixed Room Background (Never changes on click) -->
+                        <div class="gallery-fixed-bg" style="background-image: url('@bgImage.ImagePath');">
+                            <span class="gallery-bg-badge"><i class="fas fa-image me-1"></i>Room View</span>
+                        </div>
+                    }
+
+                    @if (scrollableImages.Any())
+                    {
+                        <!-- Gallery Track (Mobile swipe left-right, Desktop click arrows/dots) -->
+                        <div class="gallery-track" id="galleryTrack" title="Click anywhere to zoom in">
+                            @for (int i = 0; i < scrollableImages.Count; i++)
+                            {
+                                var img = scrollableImages[i];
+                                <div class="gallery-slide" data-index="@i">
+                                    <img src="@img.ImagePath" alt="@(img.AltText ?? Model.Name)" loading="@(i == 0 ? "eager" : "lazy")" />
+                                </div>
+                            }
+                        </div>
+
+                        @if (scrollableImages.Count > 1)
+                        {
+                            <!-- Desktop Click Controls (Prev / Next Buttons) -->
+                            <button type="button" class="gallery-nav-btn prev" id="galleryPrevBtn" title="Previous image" aria-label="Previous image">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button type="button" class="gallery-nav-btn next" id="galleryNextBtn" title="Next image" aria-label="Next image">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+
+                            <!-- Image Count Badge (e.g. 1 / 4) -->
+                            <div class="gallery-counter-badge" id="galleryCounter">
+                                <i class="fas fa-images me-1" style="color:var(--gold);"></i><span id="currentImgIdx">1</span> / @scrollableImages.Count
+                            </div>
+
+                            <!-- Indicator Dots (Interactive on click) -->
+                            <div class="gallery-dots" id="galleryDots">
+                                @for (int i = 0; i < scrollableImages.Count; i++)
+                                {
+                                    <button type="button" class="gallery-dot @(i == 0 ? "active" : "")" data-index="@i" title="View image @(i + 1)" aria-label="View image @(i + 1)"></button>
+                                }
+                            </div>
+                        }
+                    }
+                    else if (bgImage == null)
+                    {
+                        <div class="gallery-empty">
                             <i class="fas fa-couch" style="font-size:5rem;color:var(--gold-light);"></i>
                         </div>
                     }
                 </div>
-                @if (Model.Images?.Count > 1)
-                {
-                    <div class="product-thumb-list">
-                        @foreach (var img in Model.Images)
-                        {
-                            <div class="product-thumb @(img.IsMain ? "active" : "")" data-img-src="@img.ImagePath">
-                                <img src="@img.ImagePath" alt="@Model.Name" loading="lazy" />
-                            </div>
-                        }
-                    </div>
-                }
             </div>
 
             <!-- Product Info Column -->
@@ -260,29 +303,40 @@
     </div>
 </div>
 
+<!-- Floating Zoom / Lightbox Modal -->
+<div id="galleryZoomModal" class="gallery-zoom-modal" aria-hidden="true">
+    <div class="gallery-zoom-backdrop" id="galleryZoomBackdrop"></div>
+    <div class="gallery-zoom-container">
+        <div class="gallery-zoom-toolbar">
+            <button type="button" class="gallery-zoom-tool-btn" id="galleryZoomInBtn" title="Zoom In (+)" aria-label="Zoom In">
+                <i class="fas fa-search-plus"></i>
+            </button>
+            <button type="button" class="gallery-zoom-tool-btn" id="galleryZoomOutBtn" title="Zoom Out (-)" aria-label="Zoom Out">
+                <i class="fas fa-search-minus"></i>
+            </button>
+            <button type="button" class="gallery-zoom-tool-btn" id="galleryZoomResetBtn" title="Reset (1x)" aria-label="Reset Zoom">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button type="button" class="gallery-zoom-close" id="galleryZoomClose" aria-label="Close zoomed view">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="gallery-zoom-content @(bgImage != null ? "has-bg" : "")" id="galleryZoomContent">
+            @if (bgImage != null)
+            {
+                <div class="gallery-zoom-bg-layer" style="background-image: url('@bgImage.ImagePath');"></div>
+            }
+            <img id="galleryZoomImg" src="" alt="@Model.Name" draggable="false" />
+        </div>
+        <div class="gallery-zoom-hint">
+            <span class="d-none d-md-inline"><i class="fas fa-search-plus me-1" style="color:var(--gold);"></i> Mouse scroll or click to zoom &bull; Drag to pan &bull; Click outside or Esc to close</span>
+            <span class="d-inline d-md-none"><i class="fas fa-hand-pointer me-1" style="color:var(--gold);"></i> Pinch or double-tap to zoom &bull; Drag to explore</span>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
-    // Thumbnail gallery
-    document.querySelectorAll('.product-thumb').forEach(thumb => {
-        thumb.addEventListener('click', function() {
-            const mainImg = document.getElementById('mainProductImg');
-            if (mainImg) {
-                mainImg.style.opacity = '0';
-                setTimeout(() => { mainImg.src = this.dataset.imgSrc; mainImg.style.opacity = '1'; }, 150);
-                mainImg.style.transition = 'opacity 0.3s ease';
-            }
-            document.querySelectorAll('.product-thumb').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
-
-    // Star rating
-    document.querySelectorAll('.rating-stars-interactive input[type=radio]').forEach(input => {
-        input.addEventListener('change', function() {
-            document.getElementById('ratingValue').value = this.value;
-        });
-    });
-
     async function submitRating(e, productId) {
         e.preventDefault();
         const rating = document.getElementById('ratingValue').value;

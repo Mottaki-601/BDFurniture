@@ -3,9 +3,14 @@
     var category = ViewBag.Category as BDFurniture_Web.Models.Category;
     var subCategory = ViewBag.SubCategory as BDFurniture_Web.Models.SubCategory;
     var products = ViewBag.Products as List<BDFurniture_Web.Models.Product> ?? new();
+    
+    var heroBg = string.IsNullOrEmpty(subCategory?.CoverImagePath)
+             ? ""
+             : $"background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{subCategory.CoverImagePath}'); background-size: cover; background-position: center; background-repeat: no-repeat;";
+
 }
 
-<div class="page-hero" style="padding-top:6rem;">
+<div class="page-hero" style="padding-top:9rem;@heroBg">
     <div class="container">
         <nav aria-label="breadcrumb"><ol class="breadcrumb breadcrumb-bd">
             <li class="breadcrumb-item"><a href="/">Home</a></li>

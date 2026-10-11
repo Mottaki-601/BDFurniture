@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/BDFurniture.sln
+/BDFurniture.sln
+/BDFurniture_Web/wwwroot/uploads
