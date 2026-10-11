@@ -66,7 +66,7 @@ namespace BDFurniture_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateProduct(Product model, List<IFormFile> images)
+        public async Task<IActionResult> CreateProduct(Product model, List<IFormFile> images, int? bgImageIndex)
         {
             if (string.IsNullOrWhiteSpace(model.Slug))
             {
@@ -91,10 +91,11 @@ namespace BDFurniture_Web.Controllers
             {
                 var uploadPath = Path.Combine(_env.WebRootPath, "uploads", "products");
                 Directory.CreateDirectory(uploadPath);
-                bool isFirst = true;
+                bool hasMain = false;
 
-                foreach (var file in images)
+                for (int i = 0; i < images.Count; i++)
                 {
+                    var file = images[i];
                     if (file.Length > 0)
                     {
                         var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
@@ -102,14 +103,19 @@ namespace BDFurniture_Web.Controllers
                         using var stream = new FileStream(filePath, FileMode.Create);
                         await file.CopyToAsync(stream);
 
+                        bool isBg = (bgImageIndex.HasValue && bgImageIndex.Value == i);
+                        bool isMain = !isBg && !hasMain;
+                        if (isMain) hasMain = true;
+
                         _db.ProductImages.Add(new ProductImage
                         {
                             ProductId = model.Id,
                             ImagePath = $"/uploads/products/{fileName}",
-                            IsMain = isFirst,
-                            SortOrder = isFirst ? 0 : 1
+                            IsMain = isMain,
+                            IsBackground = isBg,
+                            AltText = isBg ? "background" : null,
+                            SortOrder = isBg ? 999 : (isMain ? 0 : 1)
                         });
-                        isFirst = false;
                     }
                 }
                 await _db.SaveChangesAsync();
@@ -130,7 +136,7 @@ namespace BDFurniture_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProduct(Product model, List<IFormFile> newImages)
+        public async Task<IActionResult> EditProduct(Product model, List<IFormFile> newImages, int? newBgImageIndex)
         {
             ModelState.Remove("Slug");
             ModelState.Remove("SubCategory");
@@ -162,20 +168,28 @@ namespace BDFurniture_Web.Controllers
                 Directory.CreateDirectory(uploadPath);
                 bool hasMain = product.Images.Any(i => i.IsMain);
 
-                foreach (var file in newImages)
+                for (int i = 0; i < newImages.Count; i++)
                 {
+                    var file = newImages[i];
                     if (file.Length > 0)
                     {
                         var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
                         using var stream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create);
                         await file.CopyToAsync(stream);
+
+                        bool isBg = (newBgImageIndex.HasValue && newBgImageIndex.Value == i);
+                        bool isMain = !isBg && !hasMain;
+                        if (isMain) hasMain = true;
+
                         _db.ProductImages.Add(new ProductImage
                         {
                             ProductId = product.Id,
                             ImagePath = $"/uploads/products/{fileName}",
-                            IsMain = !hasMain
+                            IsMain = isMain,
+                            IsBackground = isBg,
+                            AltText = isBg ? "background" : null,
+                            SortOrder = isBg ? 999 : (isMain ? 0 : 1)
                         });
-                        hasMain = true;
                     }
                 }
             }
@@ -183,6 +197,28 @@ namespace BDFurniture_Web.Controllers
             await _db.SaveChangesAsync();
             TempData["Success"] = "Product updated successfully!";
             return RedirectToAction(nameof(Products));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleBackgroundImage(int imageId, int productId)
+        {
+            var images = await _db.ProductImages.Where(i => i.ProductId == productId).ToListAsync();
+            var target = images.FirstOrDefault(i => i.Id == imageId);
+            if (target != null)
+            {
+                bool willBeBg = !target.IsBackground;
+                foreach (var img in images)
+                {
+                    img.IsBackground = false;
+                    if (img.AltText == "background") img.AltText = null;
+                }
+                target.IsBackground = willBeBg;
+                if (willBeBg) target.AltText = "background";
+                await _db.SaveChangesAsync();
+                TempData["Success"] = willBeBg ? "Set as background image." : "Removed from background.";
+            }
+            return RedirectToAction(nameof(EditProduct), new { id = productId });
         }
 
         [HttpPost]
@@ -216,7 +252,75 @@ namespace BDFurniture_Web.Controllers
             return RedirectToAction(nameof(EditProduct), new { id = productId });
         }
 
-        // MESSAGES
+        // SUBCATEGORIES
+        public async Task<IActionResult> SubCategories()
+        {
+            var subCategories = await _db.SubCategories
+                .Include(s => s.Category)
+                .OrderBy(s => s.Category.SortOrder)
+                .ThenBy(s => s.SortOrder)
+                .ToListAsync();
+            return View(subCategories);
+        }
+
+        public async Task<IActionResult> EditSubCategory(int id)
+        {
+            var sub = await _db.SubCategories.FindAsync(id);
+            if (sub == null) return NotFound();
+            return View(sub);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSubCategory(int id, IFormFile? coverImage)
+        {
+            var sub = await _db.SubCategories.FindAsync(id);
+            if (sub == null) return NotFound();
+
+            if (coverImage != null && coverImage.Length > 0)
+            {
+                // Delete old cover image from disk
+                if (!string.IsNullOrEmpty(sub.CoverImagePath))
+                {
+                    var oldPath = Path.Combine(_env.WebRootPath, sub.CoverImagePath.TrimStart('/'));
+                    if (System.IO.File.Exists(oldPath)) System.IO.File.Delete(oldPath);
+                }
+
+                // Save new cover image
+                var uploadDir = Path.Combine(_env.WebRootPath, "uploads", "subcategories");
+                Directory.CreateDirectory(uploadDir);
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(coverImage.FileName)}";
+                var savePath = Path.Combine(uploadDir, fileName);
+                using var stream = new FileStream(savePath, FileMode.Create);
+                await coverImage.CopyToAsync(stream);
+                sub.CoverImagePath = $"/uploads/subcategories/{fileName}";
+                await _db.SaveChangesAsync();
+                TempData["Success"] = "Cover image updated successfully!";
+            }
+            else
+            {
+                TempData["Info"] = "No new image selected. Cover image unchanged.";
+            }
+
+            return RedirectToAction(nameof(SubCategories));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveSubCategoryCover(int id)
+        {
+            var sub = await _db.SubCategories.FindAsync(id);
+            if (sub != null && !string.IsNullOrEmpty(sub.CoverImagePath))
+            {
+                var fullPath = Path.Combine(_env.WebRootPath, sub.CoverImagePath.TrimStart('/'));
+                if (System.IO.File.Exists(fullPath)) System.IO.File.Delete(fullPath);
+                sub.CoverImagePath = null;
+                await _db.SaveChangesAsync();
+                TempData["Success"] = "Cover image removed.";
+            }
+            return RedirectToAction(nameof(SubCategories));
+        }
+
+
         public async Task<IActionResult> Messages()
         {
             var messages = await _db.ContactMessages.OrderByDescending(m => m.CreatedAt).ToListAsync();

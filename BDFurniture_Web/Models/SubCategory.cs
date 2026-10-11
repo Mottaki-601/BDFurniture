@@ -20,6 +20,10 @@ namespace BDFurniture_Web.Models
         [MaxLength(300)]
         public string? ImagePath { get; set; }
 
+        [MaxLength(300)]
+        [Display(Name = "Hero Cover Image")]
+        public string? CoverImagePath { get; set; }
+
         public int SortOrder { get; set; } = 0;
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.Now;

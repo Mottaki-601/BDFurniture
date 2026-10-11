@@ -13,6 +13,7 @@ namespace BDFurniture_Web.Models
         [MaxLength(200)]
         public string? AltText { get; set; }
         public bool IsMain { get; set; } = false;
+        public bool IsBackground { get; set; } = false;
         public int SortOrder { get; set; } = 0;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

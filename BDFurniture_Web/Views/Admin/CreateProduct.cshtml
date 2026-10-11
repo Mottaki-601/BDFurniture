@@ -84,8 +84,13 @@
                     <!-- Photos -->
                     <div class="col-12">
                         <label class="form-label-bd">Upload Product Images (Select multiple)</label>
-                        <input type="file" name="images" multiple class="form-control-bd" accept="image/*" />
-                        <small class="text-muted">The first image will be set as the main cover photo.</small>
+                        <input type="file" name="images" id="productImagesInput" multiple class="form-control-bd" accept="image/*" />
+                        <small class="text-muted d-block mt-1">
+                            ছবিগুলো সিলেক্ট করার পর নিচে প্রিভিউ দেখা যাবে। সেখান থেকে যেকোনো একটি ছবিকে <strong>Background Image</strong> হিসেবে নির্ধারণ করতে পারবেন (অথবা কোনটিই না)।
+                        </small>
+
+                        <!-- Dynamic Image Preview & Radio Options -->
+                        <div id="imagePreviewContainer" class="row g-3 mt-2 d-none"></div>
                     </div>
 
                     <!-- Featured and Active Flags -->
@@ -113,4 +118,77 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const imgInput = document.getElementById('productImagesInput');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+
+        if (imgInput && previewContainer) {
+            imgInput.addEventListener('change', function () {
+                previewContainer.innerHTML = '';
+                if (!this.files || this.files.length === 0) {
+                    previewContainer.classList.add('d-none');
+                    return;
+                }
+
+                previewContainer.classList.remove('d-none');
+
+                // Option: No Background Image (All normal images)
+                const noneCard = document.createElement('div');
+                noneCard.className = 'col-12';
+                noneCard.innerHTML = `
+                    <div class="p-2 border rounded-3 bg-light d-flex align-items-center gap-2">
+                        <input class="form-check-input bg-radio" type="radio" name="bgImageIndex" id="bg_none" value="-1" checked>
+                        <label class="form-check-label fw-bold text-muted small mb-0" for="bg_none" style="cursor:pointer;">
+                            <i class="fas fa-layer-group me-1 text-gold"></i> কোনো ব্যাকগ্রাউন্ড ইমেজ নয় (সবগুলো সাধারণ স্ক্রলেবল ইমেজ হিসেবে থাকবে)
+                        </label>
+                    </div>
+                `;
+                previewContainer.appendChild(noneCard);
+
+                // Add card for each selected file
+                Array.from(this.files).forEach((file, index) => {
+                    const col = document.createElement('div');
+                    col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
+                    const objUrl = URL.createObjectURL(file);
+
+                    col.innerHTML = `
+                        <div class="card h-100 shadow-sm border preview-card" id="previewCard_${index}">
+                            <img src="${objUrl}" class="card-img-top" style="height:110px;object-fit:contain;background:#fdfdfd;padding:4px;" />
+                            <div class="card-body p-2 text-center">
+                                <span class="d-block text-truncate small fw-semibold" title="${file.name}">${file.name}</span>
+                                <div class="form-check mt-1 d-flex align-items-center justify-content-center gap-1">
+                                    <input class="form-check-input bg-radio" type="radio" name="bgImageIndex" id="bg_${index}" value="${index}">
+                                    <label class="form-check-label small" for="bg_${index}" style="font-size:0.75rem;cursor:pointer;">
+                                        Set as BG
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    previewContainer.appendChild(col);
+                });
+
+                // Radio change event to highlight selected card
+                document.querySelectorAll('.bg-radio').forEach(r => {
+                    r.addEventListener('change', function () {
+                        document.querySelectorAll('.preview-card').forEach(c => {
+                            c.style.borderColor = '';
+                            c.classList.remove('shadow');
+                        });
+                        if (parseInt(this.value, 10) >= 0) {
+                            const activeCard = document.getElementById(`previewCard_${this.value}`);
+                            if (activeCard) {
+                                activeCard.style.borderColor = 'var(--gold)';
+                                activeCard.classList.add('shadow');
+                            }
+                        }
+                    });
+                });
+            });
+        }
+    </script>
+}
 

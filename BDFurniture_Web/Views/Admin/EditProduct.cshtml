@@ -27,15 +27,27 @@
                     @foreach (var img in Model.Images)
                     {
                         <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                            <div class="card position-relative shadow-sm">
-                                <img src="@img.ImagePath" class="card-img-top" style="height:120px;object-fit:cover;" />
+                            <div class="card position-relative shadow-sm @(img.IsBackground ? "border-warning" : "")">
+                                <img src="@img.ImagePath" class="card-img-top" style="height:120px;object-fit:contain;background:#fdfdfd;padding:4px;" />
                                 @if (img.IsMain)
                                 {
                                     <span class="position-absolute top-0 start-0 badge bg-gold m-1">Cover</span>
                                 }
+                                @if (img.IsBackground)
+                                {
+                                    <span class="position-absolute top-0 end-0 badge bg-dark text-warning m-1"><i class="fas fa-image me-1"></i>BG</span>
+                                }
                                 <div class="card-body p-1 text-center">
+                                    <form asp-action="ToggleBackgroundImage" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="imageId" value="@img.Id" />
+                                        <input type="hidden" name="productId" value="@Model.Id" />
+                                        <button type="submit" class="btn btn-sm @(img.IsBackground ? "btn-warning text-dark" : "btn-outline-secondary") w-100 py-0 mb-1" style="font-size:0.75rem;">
+                                            <i class="fas fa-image"></i> @(img.IsBackground ? "Remove BG" : "Set as BG")
+                                        </button>
+                                    </form>
                                     <a asp-action="DeleteImage" asp-route-imageId="@img.Id" asp-route-productId="@Model.Id" 
-                                       class="btn btn-sm btn-outline-danger w-100 py-0" onclick="return confirm('Delete this photo?');">
+                                       class="btn btn-sm btn-outline-danger w-100 py-0" onclick="return confirm('Delete this photo?');" style="font-size:0.75rem;">
                                         <i class="fas fa-trash"></i> Remove
                                     </a>
                                 </div>

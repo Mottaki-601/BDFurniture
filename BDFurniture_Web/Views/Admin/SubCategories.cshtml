@@ -1,0 +1,644 @@
+@model List<BDFurniture_Web.Models.SubCategory>
+@{
+    ViewData["Title"] = "Category Hero Images - Admin";
+    var catGroups = Model
+        .GroupBy(s => new { s.CategoryId, CatName = s.Category?.Name ?? "Uncategorized" })
+        .OrderBy(g => g.Key.CatName)
+        .ToList();
+    int totalSet   = Model.Count(s => !string.IsNullOrEmpty(s.CoverImagePath));
+    int totalUnset = Model.Count(s =>  string.IsNullOrEmpty(s.CoverImagePath));
+}
+
+@* ══════════════════════════════════════
+   HERO SECTION  (matches all admin pages)
+   ══════════════════════════════════════ *@
+<div class="page-hero" style="padding-top:6rem;padding-bottom:2.5rem;position:relative;overflow:hidden;">
+    @* decorative circles *@
+    <div style="position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;
+                background:rgba(201,169,110,0.08);pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-40px;left:10%;width:140px;height:140px;border-radius:50%;
+                background:rgba(201,169,110,0.06);pointer-events:none;"></div>
+
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <span style="font-size:0.78rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;
+                             color:var(--gold);display:block;margin-bottom:.4rem;">
+                    Admin Panel
+                </span>
+                <h1 style="margin:0;">
+                    <i class="fas fa-images me-2" style="color:var(--gold);"></i>Hero Cover Images
+                </h1>
+                <p style="color:rgba(255,255,255,0.7);margin-top:.4rem;margin-bottom:0;font-size:.95rem;">
+                    Sub-category পেজের hero section-এর background image manage করুন
+                </p>
+            </div>
+            @* Mini Stats *@
+            <div class="d-flex gap-3 flex-wrap">
+                <div class="text-center px-3 py-2 rounded-3"
+                     style="background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);min-width:90px;">
+                    <div style="font-size:1.6rem;font-weight:800;color:var(--gold);font-family:var(--font-primary);line-height:1;">@totalSet</div>
+                    <div style="font-size:0.72rem;color:rgba(255,255,255,0.6);margin-top:.15rem;">Cover Set</div>
+                </div>
+                <div class="text-center px-3 py-2 rounded-3"
+                     style="background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);min-width:90px;">
+                    <div style="font-size:1.6rem;font-weight:800;color:#ff8a80;font-family:var(--font-primary);line-height:1;">@totalUnset</div>
+                    <div style="font-size:0.72rem;color:rgba(255,255,255,0.6);margin-top:.15rem;">Pending</div>
+                </div>
+                <div class="text-center px-3 py-2 rounded-3"
+                     style="background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);min-width:90px;">
+                    <div style="font-size:1.6rem;font-weight:800;color:#fff;font-family:var(--font-primary);line-height:1;">@Model.Count</div>
+                    <div style="font-size:0.72rem;color:rgba(255,255,255,0.6);margin-top:.15rem;">Total</div>
+                </div>
+            </div>
+        </div>
+
+        @* Breadcrumb *@
+        <nav aria-label="breadcrumb" class="mt-3">
+            <ol class="breadcrumb breadcrumb-bd mb-0">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item active">Hero Cover Images</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+@* ══════════════════════════════════════
+   MAIN CONTENT
+   ══════════════════════════════════════ *@
+<section class="section-pad-sm">
+<div class="container">
+
+    @* Alerts *@
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert border-0 rounded-3 mb-4 d-flex align-items-center gap-2 shadow-sm"
+             style="background:linear-gradient(135deg,#d4edda,#c3e6cb);border-left:5px solid #28a745!important;color:#155724;">
+            <i class="fas fa-check-circle fa-lg"></i>
+            <span class="fw-semibold">@TempData["Success"]</span>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Info"] != null)
+    {
+        <div class="alert border-0 rounded-3 mb-4 d-flex align-items-center gap-2 shadow-sm"
+             style="background:linear-gradient(135deg,#d1ecf1,#bee5eb);border-left:5px solid #17a2b8!important;color:#0c5460;">
+            <i class="fas fa-info-circle fa-lg"></i>
+            <span class="fw-semibold">@TempData["Info"]</span>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @* ── TOP ROW : Upload Form  |  Live Preview ── *@
+    <div class="row g-4 mb-4">
+
+        @* ─ LEFT : Upload Card ─ *@
+        <div class="col-12 col-lg-5">
+            <div style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow-md);height:100%;">
+
+                @* Card Header *@
+                <div style="background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);
+                            padding:1.25rem 1.5rem;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;
+                                background:rgba(201,169,110,0.15);pointer-events:none;"></div>
+                    <h6 style="margin:0;color:#fff;font-weight:700;font-size:0.95rem;position:relative;">
+                        <i class="fas fa-cloud-upload-alt me-2" style="color:var(--gold);"></i>Upload Cover Image
+                    </h6>
+                    <p style="margin:0;color:rgba(255,255,255,0.55);font-size:0.78rem;margin-top:.25rem;position:relative;">
+                        Category → Sub-Category → Image → Upload
+                    </p>
+                </div>
+
+                <div style="padding:1.5rem;">
+                    <form id="uploadForm" asp-action="EditSubCategory" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" id="selectedSubId" />
+
+                        @* Step 1 *@
+                        <div class="mb-3">
+                            <label class="form-label-bd">
+                                <span class="badge rounded-pill me-1 px-2 py-1"
+                                      style="background:var(--gold);font-size:0.68rem;vertical-align:middle;">1</span>
+                                Category
+                            </label>
+                            <select id="catSelect"
+                                    style="width:100%;padding:.75rem 1rem;border:2px solid var(--cream-dark);
+                                           border-radius:10px;font-size:.9rem;background:var(--cream);
+                                           color:var(--dark-medium);outline:none;transition:.25s;cursor:pointer;
+                                           appearance:auto;">
+                                <option value="">— Select Category —</option>
+                                @foreach (var g in catGroups)
+                                {
+                                    <option value="@g.Key.CategoryId">@g.Key.CatName</option>
+                                }
+                            </select>
+                        </div>
+
+                        @* Step 2 *@
+                        <div class="mb-3">
+                            <label class="form-label-bd">
+                                <span class="badge rounded-pill me-1 px-2 py-1"
+                                      style="background:var(--gold);font-size:0.68rem;vertical-align:middle;">2</span>
+                                Sub-Category
+                            </label>
+                            <select id="subSelect" disabled
+                                    style="width:100%;padding:.75rem 1rem;border:2px solid var(--cream-dark);
+                                           border-radius:10px;font-size:.9rem;background:var(--cream);
+                                           color:var(--dark-medium);outline:none;transition:.25s;cursor:pointer;
+                                           appearance:auto;">
+                                <option value="">— Select Sub-Category —</option>
+                            </select>
+                        </div>
+
+                        @* Step 3 : Drop Zone *@
+                        <div class="mb-3">
+                            <label class="form-label-bd">
+                                <span class="badge rounded-pill me-1 px-2 py-1"
+                                      style="background:var(--gold);font-size:0.68rem;vertical-align:middle;">3</span>
+                                Cover Image
+                            </label>
+                            <div id="dropZone"
+                                 onclick="document.getElementById('coverImg').click()"
+                                 style="border:2px dashed var(--cream-dark);border-radius:14px;
+                                        padding:1.75rem 1rem;text-align:center;cursor:pointer;
+                                        transition:.3s;background:var(--cream);">
+                                <div id="dropIdle">
+                                    <i class="fas fa-image" style="font-size:2.2rem;color:var(--gold-light);"></i>
+                                    <p style="margin:.6rem 0 .2rem;font-size:.85rem;color:var(--text-medium);font-weight:500;">
+                                        Click here or drag &amp; drop
+                                    </p>
+                                    <p style="margin:0;font-size:.72rem;color:var(--text-light);">
+                                        JPG · PNG · WebP &nbsp;|&nbsp; Recommended: 1400×500 px
+                                    </p>
+                                </div>
+                                <div id="dropActive" class="d-none">
+                                    <i class="fas fa-check-circle" style="font-size:2rem;color:#28a745;"></i>
+                                    <p id="dropFileName" style="margin:.5rem 0 0;font-size:.82rem;color:#155724;font-weight:600;"></p>
+                                </div>
+                            </div>
+                            <input type="file" id="coverImg" name="coverImage" accept="image/*" class="d-none" />
+                        </div>
+
+                        @* New image preview *@
+                        <div id="previewWrap" class="mb-3 d-none">
+                            <label class="form-label-bd">New Image Preview</label>
+                            <div style="border-radius:12px;overflow:hidden;aspect-ratio:16/6;position:relative;">
+                                <img id="previewImg" src="" alt="preview"
+                                     style="width:100%;height:100%;object-fit:cover;" />
+                                <button type="button" onclick="clearImg()"
+                                        style="position:absolute;top:.5rem;right:.5rem;
+                                               background:rgba(220,53,69,.85);border:none;color:#fff;
+                                               border-radius:50%;width:28px;height:28px;font-size:.8rem;
+                                               cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        @* Submit *@
+                        <button type="submit" id="submitBtn" disabled
+                                style="width:100%;padding:.85rem;border:none;border-radius:12px;
+                                       background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+                                       color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;
+                                       transition:.3s;opacity:.6;">
+                            <i class="fas fa-upload me-2"></i>Upload Cover Image
+                        </button>
+                        <p id="submitHint" style="text-align:center;font-size:.75rem;color:var(--text-light);margin:.6rem 0 0;">
+                            Sub-category ও image দুটোই select করুন
+                        </p>
+                    </form>
+
+                    @* Hidden remove form *@
+                    <form id="removeForm" asp-action="RemoveSubCategoryCover" method="post" class="d-none">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" id="removeSubId" />
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        @* ─ RIGHT : Live Preview Card ─ *@
+        <div class="col-12 col-lg-7">
+            <div style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow-md);height:100%;">
+
+                @* Card Header *@
+                <div style="background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);
+                            padding:1.25rem 1.5rem;">
+                    <h6 style="margin:0;color:#fff;font-weight:700;font-size:0.95rem;">
+                        <i class="fas fa-eye me-2" style="color:var(--gold);"></i>Current Cover Preview
+                    </h6>
+                    <p style="margin:0;color:rgba(255,255,255,0.55);font-size:0.78rem;margin-top:.25rem;">
+                        Select করলে এখানে দেখাবে
+                    </p>
+                </div>
+
+                <div style="padding:1.5rem;height:calc(100% - 70px);display:flex;flex-direction:column;">
+
+                    @* Idle state *@
+                    <div id="previewIdle"
+                         style="flex:1;display:flex;flex-direction:column;align-items:center;
+                                justify-content:center;text-align:center;padding:2rem 1rem;">
+                        <div style="width:80px;height:80px;border-radius:50%;
+                                    background:var(--cream);display:flex;align-items:center;
+                                    justify-content:center;margin-bottom:1rem;">
+                            <i class="fas fa-hand-pointer" style="font-size:2rem;color:var(--cream-dark);"></i>
+                        </div>
+                        <p style="color:var(--text-light);font-size:.9rem;margin:0;">
+                            Left থেকে category &amp; sub-category select করুন
+                        </p>
+                    </div>
+
+                    @* Cover display *@
+                    <div id="coverDisplay" style="display:none;flex-direction:column;flex:1;">
+
+                        @* Sub-category label + status badge *@
+                        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                            <h6 id="coverTitle"
+                                style="margin:0;color:var(--primary);font-family:var(--font-primary);font-size:1rem;"></h6>
+                            <span id="coverStatusBadge" class="badge rounded-pill px-3 py-2" style="font-size:.75rem;"></span>
+                        </div>
+
+                        @* Cover image area *@
+                        <div style="border-radius:14px;overflow:hidden;aspect-ratio:16/6;
+                                    background:linear-gradient(135deg,var(--primary),var(--primary-light));
+                                    position:relative;flex-shrink:0;">
+                            <img id="currentCoverImg" src="" alt=""
+                                 style="width:100%;height:100%;object-fit:cover;display:none;" />
+                            <div id="noCoverMsg"
+                                 style="position:absolute;inset:0;display:flex;align-items:center;
+                                        justify-content:center;flex-direction:column;gap:.5rem;">
+                                <i class="fas fa-image" style="font-size:3rem;color:rgba(255,255,255,.2);"></i>
+                                <span style="color:rgba(255,255,255,.4);font-size:.82rem;">No cover image set</span>
+                            </div>
+                            @* "HERO" label overlay *@
+                            <div style="position:absolute;top:.75rem;left:.75rem;
+                                        background:rgba(0,0,0,.5);backdrop-filter:blur(4px);
+                                        color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.1em;
+                                        padding:.25rem .6rem;border-radius:20px;text-transform:uppercase;">
+                                Hero Preview
+                            </div>
+                        </div>
+
+                        @* Action row *@
+                        <div id="coverActRow" class="mt-3 d-none">
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <button onclick="removeCover()"
+                                        style="background:transparent;border:2px solid #dc3545;color:#dc3545;
+                                               border-radius:8px;padding:.4rem .9rem;font-size:.8rem;
+                                               font-weight:600;cursor:pointer;transition:.25s;"
+                                        onmouseover="this.style.background='#dc3545';this.style.color='#fff';"
+                                        onmouseout="this.style.background='transparent';this.style.color='#dc3545';">
+                                    <i class="fas fa-trash me-1"></i>Remove Cover
+                                </button>
+                                <span id="coverPathTxt"
+                                      style="font-size:.7rem;color:var(--text-light);word-break:break-all;"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ══════════════════════════════════════
+       OVERVIEW TABLE
+       ══════════════════════════════════════ *@
+    <div style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow-md);">
+
+        @* Table header *@
+        <div style="background:linear-gradient(135deg,var(--primary),var(--primary-light));
+                    padding:1.25rem 1.5rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;">
+            <div>
+                <h6 style="margin:0;color:#fff;font-weight:700;font-size:0.95rem;">
+                    <i class="fas fa-table me-2" style="color:var(--gold);"></i>All Sub-Categories
+                </h6>
+                <p style="margin:0;color:rgba(255,255,255,.5);font-size:.75rem;margin-top:.2rem;">
+                    "Edit" click করলে উপরের form-এ auto-select হবে
+                </p>
+            </div>
+            @* Filter pills *@
+            <div class="ms-auto d-flex gap-2 flex-wrap">
+                <button onclick="filterTable('all')" id="fAll"
+                        class="filter-pill filter-pill-active">All</button>
+                <button onclick="filterTable('set')" id="fSet"
+                        class="filter-pill">
+                    <i class="fas fa-check me-1"></i>Set (@totalSet)
+                </button>
+                <button onclick="filterTable('unset')" id="fUnset"
+                        class="filter-pill">
+                    <i class="fas fa-times me-1"></i>Pending (@totalUnset)
+                </button>
+            </div>
+        </div>
+
+        @* Search bar *@
+        <div style="padding:.75rem 1.5rem;border-bottom:1px solid var(--cream-dark);background:var(--cream);">
+            <div style="position:relative;max-width:340px;">
+                <i class="fas fa-search" style="position:absolute;left:.9rem;top:50%;transform:translateY(-50%);
+                                                color:var(--text-light);font-size:.85rem;pointer-events:none;"></i>
+                <input type="text" id="tableSearch" placeholder="Search sub-category…"
+                       oninput="searchTable(this.value)"
+                       style="width:100%;padding:.6rem .9rem .6rem 2.4rem;border:2px solid var(--cream-dark);
+                              border-radius:10px;font-size:.85rem;background:#fff;outline:none;
+                              color:var(--dark-medium);transition:.25s;" />
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="font-size:.875rem;">
+                <thead style="background:var(--cream);">
+                    <tr>
+                        <th class="px-4 py-3" style="color:var(--text-medium);font-weight:600;font-size:.78rem;
+                                                     text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;">
+                            Sub-Category
+                        </th>
+                        <th class="py-3" style="color:var(--text-medium);font-weight:600;font-size:.78rem;
+                                                text-transform:uppercase;letter-spacing:.06em;">
+                            Category
+                        </th>
+                        <th class="py-3" style="color:var(--text-medium);font-weight:600;font-size:.78rem;
+                                                text-transform:uppercase;letter-spacing:.06em;">
+                            Cover
+                        </th>
+                        <th class="py-3 text-end pe-4" style="color:var(--text-medium);font-weight:600;font-size:.78rem;
+                                                              text-transform:uppercase;letter-spacing:.06em;">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="subTable">
+                    @foreach (var sub in Model.OrderBy(s => s.Category?.Name).ThenBy(s => s.SortOrder))
+                    {
+                        bool hasCover = !string.IsNullOrEmpty(sub.CoverImagePath);
+                        <tr class="sub-row @(hasCover ? "row-set" : "row-unset")"
+                            data-name="@sub.Name.ToLower()"
+                            style="border-bottom:1px solid var(--cream);">
+                            <td class="px-4 py-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    @if (hasCover)
+                                    {
+                                        <div style="width:40px;height:28px;border-radius:6px;overflow:hidden;flex-shrink:0;">
+                                            <img src="@sub.CoverImagePath" alt=""
+                                                 style="width:100%;height:100%;object-fit:cover;" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div style="width:40px;height:28px;border-radius:6px;background:var(--cream-dark);
+                                                    display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                            <i class="fas fa-image" style="font-size:.7rem;color:var(--text-light);"></i>
+                                        </div>
+                                    }
+                                    <span class="fw-semibold" style="color:var(--primary);">@sub.Name</span>
+                                </div>
+                            </td>
+                            <td class="py-3">
+                                <span class="badge rounded-pill px-3"
+                                      style="background:var(--cream);color:var(--primary);
+                                             font-weight:600;font-size:.72rem;border:1px solid var(--cream-dark);">
+                                    @sub.Category?.Name
+                                </span>
+                            </td>
+                            <td class="py-3">
+                                @if (hasCover)
+                                {
+                                    <span class="badge rounded-pill px-3 py-1"
+                                          style="background:#d4edda;color:#155724;font-size:.72rem;">
+                                        <i class="fas fa-check me-1"></i>Set
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge rounded-pill px-3 py-1"
+                                          style="background:#fff0f0;color:#c0392b;font-size:.72rem;">
+                                        <i class="fas fa-times me-1"></i>Not Set
+                                    </span>
+                                }
+                            </td>
+                            <td class="py-3 text-end pe-4">
+                                <button onclick="quickSelect(@sub.CategoryId, @sub.Id,
+                                                 '@System.Web.HttpUtility.JavaScriptStringEncode(sub.Name)',
+                                                 '@(sub.CoverImagePath ?? "")')"
+                                        style="background:var(--cream);border:1.5px solid var(--cream-dark);
+                                               border-radius:8px;color:var(--primary);font-size:.78rem;
+                                               font-weight:600;padding:.35rem .9rem;cursor:pointer;
+                                               transition:.2s;white-space:nowrap;"
+                                        onmouseover="this.style.background='var(--gold)';this.style.color='#fff';this.style.borderColor='var(--gold)';"
+                                        onmouseout="this.style.background='var(--cream)';this.style.color='var(--primary)';this.style.borderColor='var(--cream-dark)';">
+                                    <i class="fas fa-edit me-1" style="color:inherit;"></i>Edit
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div style="padding:.9rem 1.5rem;background:var(--cream);border-top:1px solid var(--cream-dark);
+                    font-size:.78rem;color:var(--text-light);">
+            <i class="fas fa-lightbulb me-1" style="color:var(--gold);"></i>
+            Tip: Table-এর "Edit" বাটনে click করলে উপরে form-এ automatically select হয়ে যাবে
+        </div>
+    </div>
+
+</div>
+</section>
+
+@* ── Filter pill styles (inline, no extra CSS file) ── *@
+<style>
+    .filter-pill {
+        background: rgba(255,255,255,.12);
+        border: 1.5px solid rgba(255,255,255,.2);
+        color: rgba(255,255,255,.75);
+        border-radius: 50px;
+        padding: .3rem .85rem;
+        font-size: .75rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: .2s;
+        white-space: nowrap;
+    }
+    .filter-pill:hover, .filter-pill-active {
+        background: var(--gold) !important;
+        border-color: var(--gold) !important;
+        color: #fff !important;
+    }
+    #catSelect:focus, #subSelect:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(201,169,110,.18);
+    }
+    #tableSearch:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(201,169,110,.18);
+    }
+</style>
+
+@* ── JavaScript ── *@
+<script>
+// Sub-category data map: catId -> [{id, name, cover}]
+const subMap = {
+    @foreach (var g in catGroups)
+    {
+        @:@g.Key.CategoryId: [@Html.Raw(string.Join(",", g.Select(s =>
+            $"{{id:{s.Id},name:\"{System.Web.HttpUtility.JavaScriptStringEncode(s.Name)}\",cover:\"{System.Web.HttpUtility.JavaScriptStringEncode(s.CoverImagePath ?? "")}\"}}"
+        )))],
+    }
+};
+
+const catSel   = document.getElementById('catSelect');
+const subSel   = document.getElementById('subSelect');
+const fileInp  = document.getElementById('coverImg');
+const submitBtn= document.getElementById('submitBtn');
+const submitHint= document.getElementById('submitHint');
+const dropZone = document.getElementById('dropZone');
+
+// ── Category change ──
+catSel.addEventListener('change', function () {
+    const catId = this.value;
+    subSel.innerHTML = '<option value="">— Select Sub-Category —</option>';
+    subSel.disabled  = !catId;
+    if (catId && subMap[catId]) {
+        subMap[catId].forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.id;
+            opt.textContent = s.name;
+            opt.dataset.cover = s.cover;
+            subSel.appendChild(opt);
+        });
+    }
+    resetPreview();
+    checkReady();
+});
+
+// ── Sub-Category change ──
+subSel.addEventListener('change', function () {
+    document.getElementById('selectedSubId').value = this.value;
+    if (this.value) {
+        const opt = this.options[this.selectedIndex];
+        showCurrentCover(opt.textContent.trim(), opt.dataset.cover || '');
+    } else {
+        resetPreview();
+    }
+    checkReady();
+});
+
+// ── File input ──
+fileInp.addEventListener('change', function () {
+    if (this.files && this.files[0]) {
+        const f = this.files[0];
+        document.getElementById('dropIdle').classList.add('d-none');
+        document.getElementById('dropActive').classList.remove('d-none');
+        document.getElementById('dropFileName').textContent = f.name;
+        dropZone.style.borderColor = 'var(--gold)';
+        dropZone.style.background  = '#fffbf4';
+
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('previewImg').src = e.target.result;
+            document.getElementById('previewWrap').classList.remove('d-none');
+        };
+        reader.readAsDataURL(f);
+    }
+    checkReady();
+});
+
+// ── Drag & Drop ──
+dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.style.borderColor='var(--gold)'; dropZone.style.background='#fffbf4'; });
+dropZone.addEventListener('dragleave', ()=> { if (!fileInp.files?.length) { dropZone.style.borderColor='var(--cream-dark)'; dropZone.style.background='var(--cream)'; } });
+dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    if (e.dataTransfer.files?.[0]) {
+        fileInp.files = e.dataTransfer.files;
+        fileInp.dispatchEvent(new Event('change'));
+    }
+});
+
+function clearImg() {
+    fileInp.value = '';
+    document.getElementById('previewWrap').classList.add('d-none');
+    document.getElementById('dropIdle').classList.remove('d-none');
+    document.getElementById('dropActive').classList.add('d-none');
+    dropZone.style.borderColor='var(--cream-dark)';
+    dropZone.style.background='var(--cream)';
+    checkReady();
+}
+
+function checkReady() {
+    const ok = subSel.value && fileInp.files?.length;
+    submitBtn.disabled = !ok;
+    submitBtn.style.opacity = ok ? '1' : '.6';
+    submitBtn.style.transform = ok ? '' : '';
+    submitHint.style.display = ok ? 'none' : '';
+}
+
+function showCurrentCover(name, coverPath) {
+    document.getElementById('previewIdle').style.display = 'none';
+    const disp = document.getElementById('coverDisplay');
+    disp.style.display = 'flex';
+
+    document.getElementById('coverTitle').textContent = name;
+
+    const img     = document.getElementById('currentCoverImg');
+    const noMsg   = document.getElementById('noCoverMsg');
+    const actRow  = document.getElementById('coverActRow');
+    const badge   = document.getElementById('coverStatusBadge');
+
+    if (coverPath) {
+        img.src = coverPath; img.style.display = 'block'; noMsg.style.display = 'none';
+        actRow.classList.remove('d-none');
+        document.getElementById('removeSubId').value = subSel.value;
+        document.getElementById('coverPathTxt').textContent = coverPath;
+        badge.textContent='✓ Cover Set'; badge.style.background='#d4edda'; badge.style.color='#155724';
+    } else {
+        img.style.display = 'none'; noMsg.style.display = 'flex';
+        actRow.classList.add('d-none');
+        badge.textContent='No Cover'; badge.style.background='#fff0f0'; badge.style.color='#c0392b';
+    }
+}
+
+function resetPreview() {
+    document.getElementById('previewIdle').style.display = 'flex';
+    document.getElementById('coverDisplay').style.display = 'none';
+}
+
+function removeCover() {
+    if (!confirm('এই sub-category-র cover image সরিয়ে দেবেন?')) return;
+    document.getElementById('removeForm').submit();
+}
+
+// ── Quick-select from table ──
+function quickSelect(catId, subId, subName, cover) {
+    catSel.value = catId;
+    catSel.dispatchEvent(new Event('change'));
+    setTimeout(() => {
+        subSel.value = subId;
+        subSel.dispatchEvent(new Event('change'));
+        document.querySelector('.page-hero').nextElementSibling.scrollIntoView({ behavior:'smooth', block:'start' });
+    }, 60);
+}
+
+// ── Table Filter ──
+let currentFilter = 'all';
+function filterTable(f) {
+    currentFilter = f;
+    ['fAll','fSet','fUnset'].forEach(id => document.getElementById(id).classList.remove('filter-pill-active'));
+    document.getElementById(f === 'all' ? 'fAll' : f === 'set' ? 'fSet' : 'fUnset').classList.add('filter-pill-active');
+    applyTableFilters();
+}
+
+// ── Table Search ──
+function searchTable(q) { applyTableFilters(q); }
+
+function applyTableFilters(q) {
+    const query = (q ?? document.getElementById('tableSearch').value).toLowerCase().trim();
+    document.querySelectorAll('.sub-row').forEach(row => {
+        const nameMatch = !query || row.dataset.name.includes(query);
+        const filterMatch = currentFilter === 'all'
+            || (currentFilter === 'set'   && row.classList.contains('row-set'))
+            || (currentFilter === 'unset' && row.classList.contains('row-unset'));
+        row.style.display = (nameMatch && filterMatch) ? '' : 'none';
+    });
+}
+</script>
