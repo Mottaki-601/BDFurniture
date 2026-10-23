@@ -1865,8 +1865,16 @@ label.form-label-bd {
         box-shadow: none;
         padding: 0.5rem 0;
     }
-    .nav-mega-dropdown:hover .mega-menu { display: none; }
-    .nav-mega-dropdown.open .mega-menu { display: block; }
+    /* Mobile: hover must not open the mega menu */
+    .nav-mega-dropdown:hover:not(.open):not(.show) > .mega-menu {
+        display: none !important;
+    }
+
+    /* Mobile: open the menu only when clicked */
+    .nav-mega-dropdown.open > .mega-menu,
+    .nav-mega-dropdown.show > .mega-menu {
+        display: block !important;
+    }
     .mega-menu-link { color: rgba(255,255,255,0.8) !important; }
     .mega-menu-link:hover { color: var(--gold) !important; background: rgba(255,255,255,0.05); }
     .mega-menu-title { color: var(--gold-light); }
@@ -2041,5 +2049,179 @@ label.form-label-bd {
 
 .navbar-main .navbar-brand {
     color: #ffffff !important;
+}
+
+    /* ===== ADMIN DROPDOWN ===== */
+
+    .navbar-main .admin-dropdown {
+        position: relative;
+    }
+
+    .navbar-main .admin-dropdown-menu {
+        min-width: 200px;
+        padding: 0.5rem;
+        background: var(--primary);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        box-shadow: var(--shadow-lg);
+    }
+
+        .navbar-main .admin-dropdown-menu .dropdown-item {
+            padding: 0.7rem 0.85rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.9rem;
+            border-radius: 6px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+            .navbar-main .admin-dropdown-menu .dropdown-item:hover,
+            .navbar-main .admin-dropdown-menu .dropdown-item:focus {
+                background: rgba(255, 255, 255, 0.08);
+                color: var(--gold);
+            }
+
+        .navbar-main .admin-dropdown-menu .dropdown-divider {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+/* Desktop: hover or keyboard focus */
+@media (min-width: 992px) {
+    .navbar-main .admin-dropdown:hover > .dropdown-menu,
+    .navbar-main .admin-dropdown:focus-within > .dropdown-menu {
+        display: block;
+        margin-top: 0;
+    }
+
+    .navbar-main .admin-dropdown-menu {
+        left: 0;
+        right: auto;
+    }
+}
+
+/* Mobile: show dropdown inside the collapsed navbar */
+@media (max-width: 991.98px) {
+    .navbar-main .admin-dropdown-menu {
+        position: static;
+        width: 100%;
+        margin: 0.25rem 0 0.5rem;
+        box-shadow: none;
+    }
+}
+
+/* ==========================================
+   BD FURNITURE - ROLE PAGE DASHBOARD HERO
+   Add this block at the END of wwwroot/css/site.css
+   ========================================== */
+
+.role-dashboard-hero {
+    /* Navbar is fixed; keep the hero immediately below it. */
+    margin-top: 84px;
+    padding: 1.45rem 0 1.8rem;
+    color: var(--white);
+    background: linear-gradient(115deg, var(--primary) 0%, #382014 55%, #24130D 100%);
+    border-bottom: 1px solid rgba(201, 169, 110, 0.22);
+}
+
+.role-dashboard-hero-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.role-dashboard-hero-heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.role-dashboard-hero-icon {
+    flex: 0 0 auto;
+    color: var(--gold);
+    font-size: clamp(2.6rem, 4vw, 3.8rem);
+    line-height: 1;
+}
+
+.role-dashboard-hero h1 {
+    margin: 0 0 0.45rem;
+    color: var(--white);
+    font-family: var(--font-primary);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.12;
+}
+
+.role-dashboard-hero p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.82);
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.role-dashboard-hero-button {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.7rem 1.1rem;
+    color: var(--gold-light);
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    border-radius: 50px;
+    font-family: var(--font-secondary);
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+    .role-dashboard-hero-button:hover {
+        color: var(--primary);
+        background: var(--gold);
+        border-color: var(--gold);
+    }
+
+@media (max-width: 991.98px) {
+    .role-dashboard-hero {
+        margin-top: 76px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .role-dashboard-hero {
+        margin-top: 76px;
+        padding: 1.25rem 0 1.4rem;
+    }
+
+    .role-dashboard-hero-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .role-dashboard-hero-heading {
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .role-dashboard-hero-icon {
+        font-size: 2.25rem;
+        margin-top: 0.15rem;
+    }
+
+    .role-dashboard-hero h1 {
+        font-size: clamp(1.65rem, 7vw, 2.2rem);
+    }
+
+    .role-dashboard-hero p {
+        font-size: 0.85rem;
+    }
+
+    .role-dashboard-hero-button {
+        padding: 0.6rem 0.9rem;
+    }
 }
 

@@ -1,0 +1,72 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityRole
+
+@{
+    ViewData["Title"] = "Edit Role";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <div class="admin-card">
+                <div class="mb-4">
+                    <span class="text-uppercase small fw-bold"
+                          style="color:var(--gold-dark);letter-spacing:2px;">
+                        Role Settings
+                    </span>
+
+                    <h1 class="h2 mt-2">Edit Role</h1>
+
+                    <p class="text-muted mb-0">
+                        Update the name of this custom role.
+                    </p>
+                </div>
+
+                @if (ViewBag.error != null)
+                {
+                    <div class="alert alert-danger">
+                        @ViewBag.error
+                    </div>
+                }
+
+                <form asp-controller="Role"
+                      asp-action="EditRole"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="id" value="@Model.Id" />
+
+                    <div class="mb-4">
+                        <label for="roleName" class="form-label fw-semibold">
+                            Role Name
+                        </label>
+
+                        <input type="text"
+                               id="roleName"
+                               name="roleName"
+                               value="@Model.Name"
+                               class="form-control"
+                               minlength="2"
+                               maxlength="50"
+                               required />
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="submit" class="btn btn-dark">
+                            <i class="fas fa-save me-2"></i>
+                            Save Changes
+                        </button>
+
+                        <a asp-controller="Role"
+                           asp-action="Index"
+                           class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
