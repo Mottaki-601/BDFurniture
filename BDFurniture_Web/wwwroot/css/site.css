@@ -2225,3 +2225,271 @@ label.form-label-bd {
     }
 }
 
+
+/* ===== BD FURNITURE - PASSWORD RECOVERY PAGES ===== */
+
+.auth-page-wrapper.auth-page-compact {
+    min-height: auto;
+    padding: 9rem 0 4rem;
+    background: linear-gradient( 135deg, var(--cream) 0%, #E8DFD5 100% );
+}
+
+.auth-page-wrapper .auth-card {
+    width: 100%;
+    border-radius: var(--radius-lg);
+}
+
+.auth-page-wrapper .auth-title {
+    line-height: 1.25;
+}
+
+.auth-page-wrapper .form-label {
+    color: var(--primary);
+}
+
+.auth-page-wrapper .auth-input {
+    min-height: 52px;
+    width: 100%;
+    padding-left: 3rem;
+    border: 1px solid var(--cream-dark);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    color: var(--dark);
+    transition: var(--transition);
+}
+
+    .auth-page-wrapper .auth-input:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 0.2rem rgba(201, 169, 110, 0.18);
+        outline: none;
+    }
+
+    .auth-page-wrapper .auth-input::placeholder {
+        color: var(--text-light);
+        font-size: 0.9rem;
+    }
+
+.auth-mark-icon {
+    width: 76px;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--gold);
+    background: rgba(201, 169, 110, 0.13);
+    border: 1px solid rgba(201, 169, 110, 0.3);
+    font-size: 1.8rem;
+}
+
+.auth-status-icon {
+    width: 86px;
+    height: 86px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    color: var(--gold-dark);
+    background: rgba(201, 169, 110, 0.14);
+    border: 1px solid rgba(201, 169, 110, 0.3);
+    font-size: 2rem;
+}
+
+.auth-status-success {
+    color: #287A50;
+    background: #EAF6EF;
+    border-color: #C9E7D4;
+}
+
+.auth-security-note,
+.auth-message-panel {
+    padding: 0.9rem 1rem;
+    color: var(--text-medium);
+    background: rgba(201, 169, 110, 0.1);
+    border: 1px solid rgba(201, 169, 110, 0.2);
+    border-radius: var(--radius-sm);
+    font-size: 0.84rem;
+    line-height: 1.7;
+}
+
+.auth-page-wrapper .btn-gold {
+    min-height: 50px;
+}
+
+.auth-page-wrapper .auth-link {
+    color: var(--gold-dark);
+}
+
+    .auth-page-wrapper .auth-link:hover {
+        color: var(--primary);
+    }
+
+.auth-page-wrapper .auth-brand-side > * {
+    position: relative;
+}
+
+@media (max-width: 767.98px) {
+    .auth-page-wrapper.auth-page-compact {
+        padding: 7rem 0 3rem;
+    }
+
+    .auth-page-wrapper .auth-brand-side {
+        min-height: 280px;
+    }
+
+    .auth-page-wrapper .auth-title {
+        font-size: 1.65rem;
+    }
+
+    .auth-mark-icon {
+        width: 62px;
+        height: 62px;
+        font-size: 1.5rem;
+    }
+}
+
+
+/* ==========================================
+   BD FURNITURE - PREMIUM FOOTER BOTTOM
+   ========================================== */
+
+.footer-bottom {
+    margin-top: 3rem;
+    padding: 1.4rem 0;
+    border-top: 1px solid rgba(201, 169, 110, 0.18);
+    text-align: left;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.footer-bottom-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem 2rem;
+}
+
+.footer-bottom-brand {
+    min-width: 0;
+}
+
+.footer-bottom .footer-copyright {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.79rem;
+    line-height: 1.7;
+}
+
+    .footer-bottom .footer-copyright strong {
+        color: #FFFFFF;
+        font-weight: 700;
+    }
+
+.footer-bottom .footer-brand-tagline {
+    color: var(--gold);
+    font-family: var(--font-primary);
+    font-size: 0.88rem;
+    font-style: italic;
+    letter-spacing: 0.025em;
+}
+
+.footer-developer-credit {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    font-size: 0.78rem;
+    line-height: 1.8;
+}
+
+.footer-credit-label {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.footer-bottom .footer-developer-name {
+    color: var(--gold-light);
+    font-weight: 700;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-bottom .footer-portfolio-link {
+    color: var(--gold);
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+    .footer-bottom .footer-developer-name:hover,
+    .footer-bottom .footer-portfolio-link:hover {
+        color: #FFFFFF;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+.footer-credit-divider {
+    width: 1px;
+    height: 15px;
+    margin: 0 0.25rem;
+    background: rgba(201, 169, 110, 0.35);
+}
+
+/* Responsive Footer */
+@media (max-width: 767.98px) {
+    .footer-bottom {
+        padding: 1.5rem 0;
+        text-align: center;
+    }
+
+    .footer-bottom-inner {
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+
+    .footer-bottom .footer-copyright {
+        font-size: 0.76rem;
+    }
+
+    .footer-bottom .footer-brand-tagline {
+        font-size: 0.84rem;
+    }
+
+    .footer-developer-credit {
+        justify-content: center;
+        font-size: 0.76rem;
+    }
+}
+/* ===== FOOTER BRAND SIGNATURE ===== */
+
+.footer-signature {
+    margin-top: 1.15rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(201, 169, 110, 0.12);
+    text-align: center;
+    color: var(--gold-light);
+    font-family: var(--font-secondary);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    line-height: 1.8;
+}
+
+    .footer-signature span {
+        color: var(--gold);
+        padding: 0 0.45rem;
+    }
+
+@media (max-width: 575.98px) {
+    .footer-signature {
+        font-size: 0.59rem;
+        letter-spacing: 0.12em;
+        margin-top: 1rem;
+        padding-top: 0.85rem;
+    }
+
+        .footer-signature span {
+            padding: 0 0.2rem;
+        }
+}

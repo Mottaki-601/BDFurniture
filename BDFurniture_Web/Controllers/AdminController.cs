@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BDFurniture_Web.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Editor")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -222,6 +222,7 @@ namespace BDFurniture_Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await _db.Products.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == id);
@@ -363,6 +364,7 @@ namespace BDFurniture_Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteVideo(int id)
         {
             var video = await _db.YouTubeVideos.FindAsync(id);
@@ -378,6 +380,7 @@ namespace BDFurniture_Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateSetting(int id, string value)
         {
             var setting = await _db.SiteSettings.FindAsync(id);

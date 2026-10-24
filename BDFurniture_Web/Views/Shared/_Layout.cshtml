@@ -99,10 +99,25 @@
                 </li>
                     <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Career">Career</a></li>
                 <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    @* Only HR and Manager will see a separate Dashboard tab *@
+                    @if (User.IsInRole("HR") || User.IsInRole("Manager"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               style="color: var(--gold) !important;"
+                               asp-controller="Admin"
+                               asp-action="Index">
+
+                                <i class="fas fa-chart-line"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                    }
+
+                    @* Only Admin will see the Admin dropdown *@
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item dropdown admin-dropdown">
-
                             <a class="nav-link dropdown-toggle"
                                href="#"
                                id="adminDropdown"
@@ -122,21 +137,17 @@
                                     <a class="dropdown-item"
                                        asp-controller="Admin"
                                        asp-action="Index">
-
                                         <i class="fas fa-tachometer-alt me-2"></i>
                                         Dashboard
                                     </a>
                                 </li>
 
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
+                                <li><hr class="dropdown-divider" /></li>
 
                                 <li>
                                     <a class="dropdown-item"
                                        asp-controller="Role"
                                        asp-action="Index">
-
                                         <i class="fas fa-user-shield me-2"></i>
                                         Roles
                                     </a>
@@ -146,12 +157,10 @@
                                     <a class="dropdown-item"
                                        asp-controller="Role"
                                        asp-action="AssignRole">
-
                                         <i class="fas fa-user-tag me-2"></i>
                                         Assign Role
                                     </a>
                                 </li>
-
                             </ul>
                         </li>
                     }
@@ -215,7 +224,61 @@
             </div>
         </div>
     </div>
-    <div class="footer-bottom"><div class="container"><p class="mb-0">&copy; @DateTime.Now.Year BD Furniture. All rights reserved. Crafted with <i class="fas fa-heart" style="color:#e74c3c;"></i> in Bangladesh</p></div></div>
+
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-inner">
+
+                    <!-- Brand Copyright & Tagline -->
+                    <div class="footer-bottom-brand">
+                        <p class="footer-copyright mb-1">
+                            &copy; @DateTime.Now.Year
+                            <strong>BD Furniture</strong>.
+                            All rights reserved.
+                        </p>
+
+                        <p class="footer-brand-tagline mb-0">
+                            Timeless Design. Everyday Comfort.
+                        </p>
+                    </div>
+
+                    <!-- Developer Credit -->
+                    <div class="footer-developer-credit">
+                        <span class="footer-credit-label">
+                            Designed &amp; Developed by
+                        </span>
+
+                        <a href="https://mottaki-601.github.io/Portfolio/"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="footer-developer-name">
+                            Mottaki Billah
+                        </a>
+
+                        <span class="footer-credit-divider"
+                              aria-hidden="true"></span>
+
+                        <a href="https://mottaki-601.github.io/Portfolio/"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="footer-portfolio-link"
+                           aria-label="View developer portfolio in a new tab">
+                            Portfolio
+                            <i class="fas fa-arrow-up-right-from-square ms-1"></i>
+                        </a>
+                    </div>
+
+                </div>
+                @* <p class="footer-signature mb-0">
+                    PREMIUM FURNITURE
+                    <span>&middot;</span>
+                    ELEGANT LIVING
+                    <span>&middot;</span>
+                    TIMELESS STYLE
+                </p> *@
+            </div>
+        </div>
+
 </footer>
 
     <a href="https://wa.me/8801678210209" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
