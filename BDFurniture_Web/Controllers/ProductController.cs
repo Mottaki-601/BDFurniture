@@ -105,7 +105,7 @@ namespace BDFurniture_Web.Controllers
         }
 
         // POST: Rate product
-        [HttpPost]
+        [HttpPost("/Product/Rate")]
         [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Rate(int productId, int rating)
@@ -125,16 +125,28 @@ namespace BDFurniture_Web.Controllers
 
             if (existingRating != null)
             {
-                // Rating rule: if 5+ ratings exist, can only increase
-                if (product.TotalRatings >= 5 && rating < existingRating.Rating)
-                    return Json(new { success = false, message = "You cannot decrease the rating after 5 reviews have been submitted." });
+                // Once rated, the user can increase but never decrease the rating
+                if (rating < existingRating.Rating)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "You cannot decrease your rating. You can only increase it."
+                    });
+                }
 
                 existingRating.Rating = rating;
                 existingRating.UpdatedAt = DateTime.Now;
             }
             else
             {
-                _db.ProductRatings.Add(new ProductRating { ProductId = productId, UserId = user.Id, Rating = rating });
+                // First rating for this user and product
+                _db.ProductRatings.Add(new ProductRating
+                {
+                    ProductId = productId,
+                    UserId = user.Id,
+                    Rating = rating
+                });
             }
 
             await _db.SaveChangesAsync();
